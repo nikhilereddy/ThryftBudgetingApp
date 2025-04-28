@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- OUTER GLOW (blurred) -->
+    <item android:bottom="2dp" android:left="2dp" android:right="2dp" android:top="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#40D7B5FF"/>   <!-- 25 % alpha glow -->
+            <corners android:radius="30dp" />
+        </shape>
+    </item>
+
+    <!-- MAIN SHAPE -->
+    <item>
+        <selector xmlns:android="http://schemas.android.com/apk/res/android">
+            <item android:state_pressed="true">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/button_purple_pressed" />
+                    <corners android:radius="30dp" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/button_purple" />
+                    <corners android:radius="30dp" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+
+</layer-list>

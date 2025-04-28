@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="purple_100">#E1BEE7</color>
+    <color name="purple_200">#CE93D8</color>
+    <color name="purple_700">#7B1FA2</color>
+    <color name="bg_splash">#9a91c9</color>
+    <color name="circle_dark">#4A148C</color>
+    <color name="circle_light">#CE93D8</color>
+    <color name="text_dark">#000000</color>
+    <color name="thryft_purple">#6b09e4</color>
+    <color name="welcome_background">#C5A6EC</color>
+    <color name="colorphone">#674fa3</color>
+    <color name="button_purple">#D7B5FF</color>
+    <color name="button_purple_pressed">#C19CFA</color>
+    <color name="bg_splashh">#bb84e8</color>
+
+</resources>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_splash">
+
+
+
+    <View
+        android:layout_width="253dp"
+        android:layout_height="215dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="-112dp"
+        android:layout_marginEnd="-59dp"
+        android:background="@drawable/bottom_left_circle" />
+
+    <View
+        android:id="@+id/topRightCircle"
+        android:layout_width="253dp"
+        android:layout_height="215dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-112dp"
+        android:layout_marginEnd="-59dp"
+        android:background="@drawable/top_right_circle" />
+
+    <View
+        android:id="@+id/bottomLeftCircle"
+        android:layout_width="333dp"
+        android:layout_height="231dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="-59dp"
+        android:layout_marginBottom="-112dp"
+        android:background="@drawable/top_right_circle" />
+
+
+    <TextView
+        android:id="@+id/logoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="THRYFT™"
+        android:textSize="45sp"
+        android:textColor="@color/thryft_purple"
+        android:fontFamily="@font/montserrat_variable"
+        android:letterSpacing="0.05"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="230dp" />
+
+
+    <View
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-59dp"
+        android:layout_marginTop="-112dp"
+        android:background="@drawable/bottom_left_circle" />
+
+    <!-- Tagline -->
+    <TextView
+        android:id="@+id/tagline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Success Made Simple"
+        android:textSize="22sp"
+        android:textColor="@color/text_dark"
+        android:layout_below="@id/logoText"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/montserratmedium"
+
+        android:layout_marginTop="8dp" />
+
+    <!-- GIF Loader (replaces ProgressBar) -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/splashloader"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/tagline"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        app:lottie_rawRes="@raw/loader"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        />
+
+
+</RelativeLayout>
