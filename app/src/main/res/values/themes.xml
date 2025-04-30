@@ -8,6 +8,7 @@
         <item name="colorControlActivated">@color/thryft_purple</item>
         <item name="colorSurfaceVariant">@color/thryft_purple</item>
 
+
     </style>
 
     <style name="Theme.ThryftApp" parent="Base.Theme.ThryftApp" />

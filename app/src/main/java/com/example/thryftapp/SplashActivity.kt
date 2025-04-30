@@ -7,30 +7,22 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieDrawable
+import com.example.thryftapp.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivitySplashBinding
 
     private var animationEnded = false
     private var delayCompleted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
-
-
-
-        // Find Views
-        val topCircle = findViewById<View>(R.id.topRightCircle)
-        val bottomCircle = findViewById<View>(R.id.bottomLeftCircle)
-        val logoText = findViewById<TextView>(R.id.logoText)
-        val tagline = findViewById<TextView>(R.id.tagline)
-        val lottieView = findViewById<LottieAnimationView>(R.id.splashloader)
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Load Animations
         val slideTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_top)
@@ -38,21 +30,21 @@ class SplashActivity : AppCompatActivity() {
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
 
         // Start Animations
-        topCircle.startAnimation(slideTop)
-        bottomCircle.startAnimation(slideBottom)
-        logoText.startAnimation(slideTop)
-        tagline.startAnimation(slideBottom)
-        lottieView.startAnimation(fadeIn)
+        binding.topRightCircle.startAnimation(slideTop)
+        binding.bottomLeftCircle.startAnimation(slideBottom)
+        binding.logoText.startAnimation(slideTop)
+        binding.tagline.startAnimation(slideBottom)
+        binding.splashloader.startAnimation(fadeIn)
 
         // Play Lottie when ready
-        lottieView.addLottieOnCompositionLoadedListener {
-            lottieView.repeatCount = LottieDrawable.INFINITE
-            lottieView.speed = 1.8f
-            lottieView.playAnimation()
+        binding.splashloader.addLottieOnCompositionLoadedListener {
+            binding.splashloader.repeatCount = LottieDrawable.INFINITE
+            binding.splashloader.speed = 1.8f
+            binding.splashloader.playAnimation()
         }
 
-        // When Lottie finishes (if needed)
-        lottieView.addAnimatorListener(object : AnimatorListenerAdapter() {
+        // When Lottie finishes
+        binding.splashloader.addAnimatorListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 animationEnded = true
                 if (delayCompleted) moveToNext()
@@ -65,7 +57,7 @@ class SplashActivity : AppCompatActivity() {
             if (animationEnded) {
                 moveToNext()
             } else {
-                moveToNext() // move anyway after delay even if animation is still looping
+                moveToNext() // force move anyway
             }
         }, 4000)
     }
@@ -75,14 +67,11 @@ class SplashActivity : AppCompatActivity() {
         val welcomeSeen = prefs.getBoolean("welcome_seen", false)
 
         if (welcomeSeen) {
-            // User has already completed welcome flow, go directly to login
             startActivity(Intent(this@SplashActivity, LoginActivity::class.java))
         } else {
-            // First time user, show Welcome screens
             startActivity(Intent(this@SplashActivity, WelcomeActivity1::class.java))
         }
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         finish()
     }
-
 }

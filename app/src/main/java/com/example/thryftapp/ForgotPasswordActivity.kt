@@ -2,24 +2,24 @@ package com.example.thryftapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.thryftapp.databinding.ActivityForgotPasswordBinding
 
 class ForgotPasswordActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityForgotPasswordBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_forgot_password)
+        binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val resetButton = findViewById<Button>(R.id.resetPasswordButton)
-        val signUpLink = findViewById<TextView>(R.id.signUpFromForgotLink)
-
-        resetButton.setOnClickListener {
+        binding.resetPasswordButton.setOnClickListener {
             Toast.makeText(this, "Reset link sent to your email!", Toast.LENGTH_SHORT).show()
         }
 
-        signUpLink.setOnClickListener {
+        binding.signUpFromForgotLink.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
             finish()
         }

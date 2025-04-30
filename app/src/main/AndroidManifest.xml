@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.thryftapp">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +16,7 @@
         android:theme="@style/Theme.ThryftApp"
         tools:targetApi="31">
 
-        <!-- Splash screen as launcher -->
+        <!-- Splash Screen -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">
@@ -23,18 +26,39 @@
             </intent-filter>
         </activity>
 
-        <!-- Welcome screen after splash -->
+        <!-- Auth Activities -->
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".WelcomeActivity1" />
         <activity android:name=".WelcomeActivity2" />
         <activity android:name=".WelcomeActivity3" />
 
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".DashboardActivity" />
+        <!-- New NavHost Activity (Center of the app after login) -->
+        <activity android:name=".NavHostActivity" />
 
-        <!-- MainActivity (will be opened later after login/onboarding) -->
-        <activity android:name=".MainActivity" />
+        <!-- Other Activities (OPTIONAL: Can delete later when you move them to Fragments) -->
+        <activity android:name=".DashboardActivity" android:exported="false" />
+        <activity android:name=".TransactionActivity" android:exported="false" />
+        <activity android:name=".CategoryActivity" android:exported="false" />
+        <activity android:name=".GraphActivity" android:exported="false" />
+        <activity
+            android:name=".ExpensePieChartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IncomePieChartActivity"
+            android:exported="false" />
+
+        <!-- File Provider for uploads -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.thryftapp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider" />
+        </provider>
 
     </application>
 

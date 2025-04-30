@@ -2,33 +2,27 @@ package com.example.thryftapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.thryftapp.databinding.ActivityLoginBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityLoginBinding
     private val userDao by lazy { AppDatabase.getDatabase(this).userDao() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val emailEt = findViewById<EditText>(R.id.emailEditText)
-        val passwordEt = findViewById<EditText>(R.id.passwordInput)
-        val loginBtn = findViewById<Button>(R.id.signInButton)
-        val signUpLink = findViewById<TextView>(R.id.signupText)
-        val forgotPasswordLink = findViewById<TextView>(R.id.forgotPasswordText)
-
-        loginBtn.setOnClickListener {
-            val email = emailEt.text.toString().trim().lowercase()
-            val password = passwordEt.text.toString()
+        binding.signInButton.setOnClickListener {
+            val email = binding.emailEditText.text.toString().trim().lowercase()
+            val password = binding.passwordInput.text.toString()
 
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
@@ -37,11 +31,11 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        signUpLink.setOnClickListener {
+        binding.signupText.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
         }
 
-        forgotPasswordLink.setOnClickListener {
+        binding.forgotPasswordText.setOnClickListener {
             startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
     }
@@ -57,22 +51,15 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this@LoginActivity, "Welcome ${user.name}!", Toast.LENGTH_SHORT).show()
 
-                // Here you can save session if you want
-                // Example:
-                // val prefs = getSharedPreferences("thryft_prefs", MODE_PRIVATE)
-                // prefs.edit().putString("logged_in_user_email", user.email).apply()
-
-                // Save user session
                 val prefs = getSharedPreferences("thryft_session", MODE_PRIVATE)
                 prefs.edit()
-                    .putInt("user_id", user.id)         // save user ID
-                    .putString("user_name", user.name)   // save user name
-                    .putString("user_email", user.email) // save user email
-                    .putBoolean("is_logged_in", true)    // mark as logged in
+                    .putInt("user_id", user.id)
+                    .putString("user_name", user.name)
+                    .putString("user_email", user.email)
+                    .putBoolean("is_logged_in", true)
                     .apply()
 
-                // Move to DashboardActivity (we'll create this later)
-                startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
+                startActivity(Intent(this@LoginActivity, NavHostActivity::class.java))
                 finish()
             }
         }

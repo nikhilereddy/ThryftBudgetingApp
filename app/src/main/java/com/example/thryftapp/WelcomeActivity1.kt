@@ -6,24 +6,22 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.thryftapp.databinding.ActivityWelcome1Binding
 
 class WelcomeActivity1 : AppCompatActivity() {
 
+    private lateinit var binding: ActivityWelcome1Binding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-        setContentView(R.layout.activity_welcome1)
-
-        // Set up Get Started button
-        val btnGetStarted = findViewById<Button>(R.id.getStartedBtn)
+        binding = ActivityWelcome1Binding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Wait 2 seconds then animate slide-in
         Handler(Looper.getMainLooper()).postDelayed({
-            btnGetStarted.visibility = View.VISIBLE
-            btnGetStarted.startAnimation(
+            binding.getStartedBtn.visibility = View.VISIBLE
+            binding.getStartedBtn.startAnimation(
                 AnimationUtils.loadAnimation(this, R.anim.btn_slide_fade_in)
             )
         }, 1500)
@@ -33,13 +31,13 @@ class WelcomeActivity1 : AppCompatActivity() {
         val handler = Handler(Looper.getMainLooper())
         val pulseRunnable = object : Runnable {
             override fun run() {
-                btnGetStarted.startAnimation(pulse)
+                binding.getStartedBtn.startAnimation(pulse)
                 handler.postDelayed(this, 3000)
             }
         }
         handler.postDelayed(pulseRunnable, 5000)
 
-        btnGetStarted.setOnClickListener {
+        binding.getStartedBtn.setOnClickListener {
             handler.removeCallbacks(pulseRunnable)
             startActivity(Intent(this, WelcomeActivity2::class.java))
             finish()

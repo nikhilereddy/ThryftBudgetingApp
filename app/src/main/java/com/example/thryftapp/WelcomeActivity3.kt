@@ -6,88 +6,77 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.example.thryftapp.databinding.ActivityWelcome3Binding
 
 class WelcomeActivity3 : AppCompatActivity() {
 
-    private lateinit var consentGroup: LinearLayout
-    private lateinit var nextButton: Button
-    private lateinit var checkboxAgree: CheckBox
+    private lateinit var binding: ActivityWelcome3Binding
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var nudgeRunnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome3)
-
-        // Find Views
-        consentGroup = findViewById(R.id.consentGroup)
-        nextButton = findViewById(R.id.nextButton)
-        checkboxAgree = findViewById(R.id.checkboxAgree)
+        binding = ActivityWelcome3Binding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Hide initially
-        consentGroup.visibility = View.INVISIBLE
-        nextButton.visibility = View.INVISIBLE
+        binding.consentGroup.visibility = View.INVISIBLE
+        binding.nextButton.visibility = View.INVISIBLE
 
         // 1.5s delay to reveal consent group
         Handler(Looper.getMainLooper()).postDelayed({
             val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
-            consentGroup.visibility = View.VISIBLE
-            consentGroup.startAnimation(fadeIn)
+            binding.consentGroup.visibility = View.VISIBLE
+            binding.consentGroup.startAnimation(fadeIn)
 
             // 2s later show button with slide
             Handler(Looper.getMainLooper()).postDelayed({
                 val slideIn = AnimationUtils.loadAnimation(this, R.anim.btn_slide_fade_in)
-                nextButton.visibility = View.VISIBLE
-                nextButton.startAnimation(slideIn)
+                binding.nextButton.visibility = View.VISIBLE
+                binding.nextButton.startAnimation(slideIn)
             }, 500)
 
         }, 1500)
 
-        // Set up checkbox and button behavior
-        checkboxAgree.setOnCheckedChangeListener { _, isChecked ->
+        // Checkbox behavior
+        binding.checkboxAgree.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                handler.removeCallbacks(nudgeRunnable) // Stop nudging
-                nextButton.isEnabled = true
-                nextButton.alpha = 1f
+                handler.removeCallbacks(nudgeRunnable)
+                binding.nextButton.isEnabled = true
+                binding.nextButton.alpha = 1f
             } else {
-                nextButton.isEnabled = false
-                nextButton.alpha = 0.5f
+                binding.nextButton.isEnabled = false
+                binding.nextButton.alpha = 0.5f
             }
         }
 
-        nextButton.setOnClickListener {
-            if (checkboxAgree.isChecked) {
+        // Next button click
+        binding.nextButton.setOnClickListener {
+            if (binding.checkboxAgree.isChecked) {
                 val prefs = getSharedPreferences("thryft_prefs", MODE_PRIVATE)
                 prefs.edit().putBoolean("welcome_seen", true).apply()
 
                 startActivity(Intent(this, SignUpActivity::class.java))
                 finish()
             }
+        }
 
-
-    }
-
-        // Define the nudge animation
+        // Nudge animation
         nudgeRunnable = object : Runnable {
             override fun run() {
-                if (!checkboxAgree.isChecked) {
+                if (!binding.checkboxAgree.isChecked) {
                     val shake = AnimationUtils.loadAnimation(this@WelcomeActivity3, R.anim.shake)
-                    checkboxAgree.startAnimation(shake)
-                    handler.postDelayed(this, 3000) // Nudge every 3s
+                    binding.checkboxAgree.startAnimation(shake)
+                    handler.postDelayed(this, 3000)
                 }
             }
         }
-
-        // Start first nudge timer after 3s
         handler.postDelayed(nudgeRunnable, 3000)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacks(nudgeRunnable) // Important to prevent memory leak
+        handler.removeCallbacks(nudgeRunnable)
     }
 }
