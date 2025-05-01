@@ -1,164 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/homeScrollView"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- 🟦 Top Row: Logo + Menu Icon -->
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="12dp"
+        android:background="@color/white">
 
-        <!-- 🟦 Top Row: Logo + Menu Icon -->
+        <!-- Left Section: Logo and Slogan -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingBottom="12dp">
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="start">
 
-            <ImageView
-                android:id="@+id/logoImageView"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_thryft_logo"
-                android:contentDescription="Logo"
-                android:scaleType="fitStart" />
+            <TextView
+                android:id="@+id/logoTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="THRYFT™"
+                android:textSize="20sp"
+                android:textColor="@color/purple_500"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"
+                android:layout_marginHorizontal="4dp"/>
 
-            <ImageView
-                android:id="@+id/menuIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_menu"
-                android:contentDescription="Menu"
-                android:layout_gravity="end" />
-
-
+            <TextView
+                android:id="@+id/subTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp"
+                android:text="Success Made Simple"
+                android:textColor="@color/black"
+                android:textSize="9sp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginHorizontal="3dp"/>
         </LinearLayout>
 
-        <!-- 🟪 Total Balance Card -->
+        <ImageView
+            android:id="@+id/menuIcon"
+            android:layout_width="30dp"
+            android:layout_height="33dp"
+            android:src="@drawable/ic_menu"
+            android:contentDescription="Menu"
+            android:layout_marginHorizontal="4dp"/>
+    </LinearLayout>
+
+    <!-- 🟪 Total Balance Card -->
+    <LinearLayout
+        android:id="@+id/summaryCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_card"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical">
+
         <LinearLayout
-            android:id="@+id/summaryCard"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_vertical">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/totalBalanceLabel"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="Total Balance"
+                android:textColor="@color/whitee"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/totalBalanceLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total Balance"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/totalBalanceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R 0.00"
+                android:textColor="@color/whitee"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/totalBalanceText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="R 0.00"
-                    android:textColor="@android:color/white"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp" />
-            </LinearLayout>
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="Right Arrow" />
+    </LinearLayout>
+
+    <!-- 💸 Expense and Income Summary -->
+    <LinearLayout
+        android:id="@+id/incomeExpenseRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_light_card"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/ic_arrow_right"
-                android:contentDescription="Right Arrow" />
+                android:src="@drawable/ic_arrow_downward"
+                android:layout_marginEnd="6dp" />
+
+            <TextView
+                android:id="@+id/expenseText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expense\nR 0.00"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- 💸 Expense and Income Summary -->
         <LinearLayout
-            android:id="@+id/incomeExpenseRow"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal"
-            android:background="@drawable/bg_light_card"
-            android:padding="16dp"
-            android:layout_marginBottom="12dp">
+            android:gravity="center_vertical"
+            android:layout_marginStart="8dp">
 
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_arrow_upward"
+                android:layout_marginEnd="6dp" />
 
-            <!-- Expense -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/incomeText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_downward"
-                    android:layout_marginEnd="6dp" />
-
-                <TextView
-                    android:id="@+id/expenseText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Expense\nR 0.00"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Income -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginStart="8dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_upward"
-                    android:layout_marginEnd="6dp" />
-
-                <TextView
-                    android:id="@+id/incomeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Income\nR 0.00"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                android:text="Income\nR 0.00"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
         </LinearLayout>
+    </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/balanceProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:progress="70"
-            android:max="100"
-            android:layout_marginBottom="16dp"
-            android:progressDrawable="@drawable/custom_progress" />
+    <ProgressBar
+        android:id="@+id/balanceProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:progress="70"
+        android:max="100"
+        android:layout_marginBottom="16dp"
+        android:progressDrawable="@drawable/custom_progress" />
 
-        <!-- 📦 Category Section (Dynamic) -->
+    <!-- 📦 Category Section (Dynamic) -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="522dp"
+        android:fillViewport="true"
+        android:paddingBottom="62dp">
+
         <LinearLayout
             android:id="@+id/categoryContainer"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-</ScrollView>
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+    </ScrollView>
+</LinearLayout>

@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/white"
     android:padding="16dp">
 
     <LinearLayout
@@ -53,7 +53,9 @@
             style="@style/SettingsItemLayout"
             android:layout_marginBottom="8dp">
             <ImageView android:src="@drawable/ic_shield" style="@style/SettingsItemIcon"/>
-            <TextView android:text="Privacy" style="@style/SettingsItemText"/>
+            <TextView android:text="  Privacy" style="@style/SettingsItemText"
+                android:textColor="@color/blackk"
+                />
         </LinearLayout>
 
         <!-- Item: Notifications -->
@@ -72,8 +74,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Notifications"
+                android:textColor="@color/blackk"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"
                 android:layout_marginStart="8dp"/>
 
             <Switch
@@ -100,7 +102,7 @@
                 android:layout_weight="1"
                 android:text="Dark Mode"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"
+                android:textColor="@color/blackk"
                 android:layout_marginStart="8dp"/>
 
             <Switch
@@ -132,7 +134,8 @@
             style="@style/SettingsItemLayout"
             android:layout_marginBottom="8dp">
             <ImageView android:src="@drawable/ic_phone" style="@style/SettingsItemIcon"/>
-            <TextView android:text="Contact Us" style="@style/SettingsItemText"/>
+            <TextView android:text="  Contact Us"  android:textColor="@color/blackk"
+                style="@style/SettingsItemText"/>
         </LinearLayout>
 
         <LinearLayout
@@ -140,7 +143,8 @@
             style="@style/SettingsItemLayout"
             android:layout_marginBottom="16dp">
             <ImageView android:src="@drawable/ic_instagram" style="@style/SettingsItemIcon"/>
-            <TextView android:text="Instagram" style="@style/SettingsItemText"/>
+            <TextView android:text="  Instagram"  android:textColor="@color/blackk"
+                style="@style/SettingsItemText"/>
         </LinearLayout>
 
         <View
@@ -163,7 +167,8 @@
             android:id="@+id/logoutLayout"
             style="@style/SettingsItemLayout">
             <ImageView android:src="@drawable/ic_logout" style="@style/SettingsItemIcon"/>
-            <TextView android:text="Logout" style="@style/SettingsItemText"/>
+            <TextView android:text="  Logout"  android:textColor="@color/blackk"
+                style="@style/SettingsItemText"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -14,12 +14,16 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-<!--        <ImageView
-            android:id="@+id/categoryIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_transport" />-->
 
+        <ImageView
+            android:id="@+id/categoryIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Category Icon"
+            android:scaleType="centerInside"
+            android:background="@drawable/bg_rounded_icon"
+            android:padding="4dp" />
         <TextView
             android:id="@+id/categoryName"
             android:layout_width="0dp"
@@ -27,6 +31,9 @@
             android:layout_weight="1"
             android:paddingStart="8dp"
             android:text="Category"
+            android:textAllCaps="true"
+            android:textSize="20dp"
+            android:textColor="@color/blackk"
             android:textStyle="bold" />
 
         <TextView
@@ -44,12 +51,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Transaction 1"
+        android:textColor="@color/blackk"
         android:paddingTop="8dp" />
 
     <TextView
         android:id="@+id/transactionLine2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/blackk"
         android:text="Transaction 2"
         android:paddingTop="4dp" />
 
@@ -58,6 +67,7 @@
         android:id="@+id/budgetStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/purple_500"
         android:text="Left R123.45"
         android:textSize="12sp"
         android:paddingTop="6dp" />

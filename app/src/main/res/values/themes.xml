@@ -1,15 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.ThryftApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:statusBarColor">@color/colorphone</item>
         <item name="android:navigationBarColor">@color/colorphone</item>
         <item name="colorControlActivated">@color/thryft_purple</item>
-        <item name="colorSurfaceVariant">@color/thryft_purple</item>
-
+        <item name="colorSurfaceVariant">@color/purple_200</item>
+        <item name="android:colorBackground">@color/white</item> <!-- Light Background -->
+        <item name="android:textColor">@color/black</item> <!-- Light Text -->
 
     </style>
-
     <style name="Theme.ThryftApp" parent="Base.Theme.ThryftApp" />
+
 </resources>

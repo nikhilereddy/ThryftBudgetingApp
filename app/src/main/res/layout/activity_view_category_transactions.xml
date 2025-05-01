@@ -4,19 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="@color/white">
 
+    <!-- Header -->
     <TextView
         android:id="@+id/categoryHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Transactions for ..."
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:paddingBottom="12dp" />
+        android:textColor="@color/purple_500"
+    android:textStyle="bold"
+    android:textSize="20sp"
+    android:paddingBottom="12dp"
+    android:gravity="start" />
 
+    <!-- Transactions List -->
     <ListView
         android:id="@+id/transactionListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:textColor="@color/blackk"
+        android:layout_height="match_parent"
+        android:divider="@drawable/purple_divider"
+    android:dividerHeight="1dp"
+    android:background="@drawable/bg_light_card"
+    android:padding="8dp"
+    android:elevation="4dp"
+    android:clipToPadding="false"/>
 </LinearLayout>

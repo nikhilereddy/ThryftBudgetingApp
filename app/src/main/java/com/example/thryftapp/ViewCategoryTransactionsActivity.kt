@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 
 class ViewCategoryTransactionsActivity : AppCompatActivity() {
 
@@ -40,7 +41,9 @@ class ViewCategoryTransactionsActivity : AppCompatActivity() {
             val transactions = db.transactionDao().getTransactionsByCategory(categoryId, userId)
 
             launch(Dispatchers.Main) {
-                header.text = "Transactions for ${category?.name ?: "Category"}"
+                if (category != null) {
+                    header.text = "Transactions for ${category.name.toUpperCase()}"
+                }
 
                 if (transactions.isEmpty()) {
                     listView.adapter = ArrayAdapter(
@@ -50,7 +53,7 @@ class ViewCategoryTransactionsActivity : AppCompatActivity() {
                     )
                 } else {
                     val items = transactions.map {
-                        "${it.description}: R${formatter.format(it.amount)}"
+                        " Description: ${it.description} \n Amt: R${formatter.format(it.amount)} \n Date:${SimpleDateFormat("dd MMM yyyy").format(it.date)} \n"
                     }
 
                     listView.adapter = ArrayAdapter(

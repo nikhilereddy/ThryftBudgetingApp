@@ -19,5 +19,6 @@ import androidx.room.Dao import androidx.room.Insert import androidx.room.Query
     @Query("SELECT * FROM categories WHERE id = :categoryId")
     fun getCategoryById(categoryId: Int): Category?
 
+
 }
 

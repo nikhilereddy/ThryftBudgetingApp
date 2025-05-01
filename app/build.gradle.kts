@@ -82,5 +82,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation ("com.mikepenz:iconics-core:5.3.2")
     implementation ("com.mikepenz:google-material-typeface:4.0.0.1-kotlin@aar")
+    implementation ("androidx.viewpager2:viewpager2:1.0.0")
+    implementation ("androidx.recyclerview:recyclerview:1.3.2")
 
 }

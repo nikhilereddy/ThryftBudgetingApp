@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingBottom="100dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_back"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Transaction"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_500" />
+        </LinearLayout>
+
+        <!-- Amount Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeColor="#4CAF50"
+            app:hintTextColor="#4CAF50">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/amountEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Amount (R)"
+                android:inputType="numberDecimal"
+                android:backgroundTint="@color/purple_100"
+                android:padding="12dp"
+                android:textColor="@color/blackk" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Transaction Type Radio Group -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transaction Type"
+            android:textSize="16sp"
+            android:textColor="#757575"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/typeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/whitee"
+            android:padding="12dp"
+            android:elevation="2dp"
+            app:cardCornerRadius="8dp">
+
+            <RadioButton
+                android:id="@+id/incomeRadio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Income"
+                android:textColor="@color/blackk"
+                android:backgroundTint="@color/purple_100"
+                android:padding="8dp" />
+
+            <RadioButton
+                android:id="@+id/expenseRadio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Expense"
+                android:textColor="@color/blackk"
+                android:backgroundTint="@color/purple_100"
+                android:padding="8dp" />
+        </RadioGroup>
+
+        <!-- Category Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@color/blackk"
+            android:padding="12dp"
+            android:elevation="2dp"
+            app:cardCornerRadius="8dp">
+
+            <Spinner
+                android:id="@+id/categorySpinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/blackk"
+                android:backgroundTint="@color/purple_100"
+                android:padding="8dp"
+                android:spinnerMode="dropdown" />
+
+            <Button
+                android:id="@+id/addCategoryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add"
+                android:textColor="@color/blackk"
+                android:backgroundTint="@color/purple_200"
+                app:cornerRadius="8dp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Photo Upload Checkbox -->
+        <CheckBox
+            android:id="@+id/photoUploadCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Photo (Optional)"
+            android:textColor="@color/blackk"
+            android:backgroundTint="@color/purple_100"
+            android:layout_marginTop="16dp"
+            android:padding="8dp" />
+
+        <!-- Photo Upload Section (Hidden by Default) -->
+        <LinearLayout
+            android:id="@+id/photoUploadSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="@color/whitee"
+            android:padding="12dp"
+            android:layout_marginTop="8dp"
+            android:elevation="2dp"
+            app:cardCornerRadius="8dp">
+
+            <ImageView
+                android:id="@+id/photoPreviewImageView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:contentDescription="Photo preview" />
+
+            <Button
+                android:id="@+id/uploadPhotoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload Photo"
+                android:textColor="@color/blackk"
+                android:backgroundTint="@color/purple_100"
+                app:cornerRadius="8dp"
+                android:layout_marginTop="8dp" />
+
+            <Button
+                android:id="@+id/clearPhotoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Clear Photo"
+                android:textColor="@color/blackk"
+              app:cornerRadius="8dp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- Save Transaction Button -->
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Transaction"
+            android:textColor="@color/blackk"
+            android:backgroundTint="@color/purple_200"
+            app:cornerRadius="8dp"
+            android:layout_marginTop="16dp"
+            android:padding="12dp" />
+    </LinearLayout>
+</ScrollView>

@@ -2,13 +2,21 @@
 <resources>
     <color name="white">#121212</color> <!-- background becomes dark -->
     <color name="black">#FFFFFF</color> <!-- text becomes light -->
+    <color name="purple_100">#E1BEE7</color>
     <color name="purple_200">#BB86FC</color>
     <color name="purple_500">#6200EE</color>
     <color name="purple_700">#3700B3</color>
     <color name="thryft_purple">#9D7AF2</color>
     <color name="button_purple">#C9A6FF</color>
     <color name="button_purple_pressed">#B88EFC</color>
-    <color name="text_dark">#FFFFFF</color>
+    <color name="text_dark">#FFFFFF</color> <!-- Light text on dark background -->
     <color name="colorphone">#2B2053</color>
-    <color name="bg_splashh">#2B2053</color>
+    <color name="bg_splashh">#2B2053</color> <!-- background for splash in dark mode -->
+    <color name="circle_dark">#4A148C</color> <!-- dark circle accent -->
+    <color name="circle_light">#CE93D8</color> <!-- light circle accent -->
+    <color name="bg_splash">#9a91c9</color> <!-- splash background -->
+    <color name="whitee">#D6B4Fc</color>
+    <color name="blackk">#FF000000</color>
+    <color name="whiteeE">#D6B4Fc</color>
+    <color name="purple_5000">#FFFFFF</color>
 </resources>

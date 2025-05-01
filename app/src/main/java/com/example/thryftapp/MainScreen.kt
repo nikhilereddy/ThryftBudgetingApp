@@ -8,6 +8,7 @@ import android.graphics.Shader
 import android.os.Build
 import android.view.WindowInsets
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -199,16 +200,19 @@ fun CustomBottomNavigation() {
             )
         }
 
-        IconButton(onClick = { /* Calendar */ }) {
+        IconButton(onClick = {
+            (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, TransactionFragment())
+                ?.addToBackStack(null)
+                ?.commit()
+        }) {
             Icon(
                 painter = painterResource(R.drawable.ic_calendar),
-                contentDescription = "Calendar",
+                contentDescription = "Home",
                 tint = Color.White,
                 modifier = Modifier.size(30.dp)
-
             )
         }
-
         // Center FAB spacer
         Box(modifier = Modifier.size(56.dp)) { }
 
@@ -273,9 +277,18 @@ fun FabGroup(
                 ),
             opacity = LinearEasing.transform(0.2f, 0.7f, animationProgress),
             onClick = {
-                val intent = Intent(context, TransactionActivity::class.java)
-                context.startActivity(intent)
-            })
+                // Replace Intent with FragmentTransaction
+                val fragment = TransactionDetailsFragment() // Create a new instance of the fragment
+
+                // Access the current activity and replace the fragment dynamically
+                val activity = context as? AppCompatActivity
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_container, fragment)  // Replace with the appropriate container ID
+                    ?.addToBackStack(null)  // Optional: to allow fragment back navigation
+                    ?.commit()
+            }
+        )
+
 
         AnimatedFab(
             icon = Icons.Default.Settings,
