@@ -9,8 +9,11 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
 import java.util.Date
-
-@Database(entities = [User::class, Transaction::class, Category::class], version = 3, exportSchema = false)
+@Database(
+    entities = [User::class, Transaction::class, Category::class],
+    version = 3,
+    exportSchema = false
+)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -22,11 +25,19 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        // Define Migration from version 1 to 2
+        // Migration from version 1 to 2
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                // Example: Add a new column to the transactions table
+                // This is just a placeholder example
                 database.execSQL("ALTER TABLE transactions ADD COLUMN new_column INTEGER DEFAULT 0")
+            }
+        }
+
+        // ✅ Migration from version 2 to 3 (adding minBudget and maxBudget)
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE categories ADD COLUMN minBudget REAL NOT NULL DEFAULT 0.0")
+                database.execSQL("ALTER TABLE categories ADD COLUMN maxBudget REAL NOT NULL DEFAULT 0.0")
             }
         }
 
@@ -37,8 +48,8 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "thryft_database"
                 )
-                    .addMigrations(MIGRATION_1_2)  // Add your migrations here
-                    .fallbackToDestructiveMigration()  // For development only
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .fallbackToDestructiveMigration() // Only use this in dev!
                     .build()
                 INSTANCE = instance
                 instance

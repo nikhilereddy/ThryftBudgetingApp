@@ -49,6 +49,8 @@ android {
 
 dependencies {
     implementation(libs.androidx.ui.viewbinding)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
 
     val composeUiVersion = "1.5.4" // ✅ Compatible with Kotlin 1.9.24 and compiler 1.5.13
 
@@ -78,5 +80,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation ("com.mikepenz:iconics-core:5.3.2")
+    implementation ("com.mikepenz:google-material-typeface:4.0.0.1-kotlin@aar")
 
 }

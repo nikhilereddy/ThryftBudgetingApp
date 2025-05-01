@@ -18,6 +18,34 @@
         android:layout_height="wrap_content"
         android:prompt="@string/type_prompt" />
 
+    <EditText
+        android:id="@+id/minBudgetEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Minimum Budget"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/maxBudgetEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Maximum Budget"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="8dp" />
+
+    <!-- 🔥 Icon Preview Image (clickable) -->
+    <ImageView
+        android:id="@+id/iconPreviewImage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="Selected Icon"
+        android:background="@android:color/darker_gray"
+        android:padding="8dp" />
+
     <Button
         android:id="@+id/addCategoryButton"
         android:layout_width="match_parent"

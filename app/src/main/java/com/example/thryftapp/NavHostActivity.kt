@@ -11,11 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.thryftapp.databinding.ActivityNavhostBinding
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.view.WindowCompat
 import com.example.thryftapp.theme.FluidBottomNavigationTheme
 
 class NavHostActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navhost)
 
@@ -23,6 +25,7 @@ class NavHostActivity : AppCompatActivity() {
         val fragment = HomeFragment()
         supportFragmentManager.commit {
             replace(R.id.fragment_container, fragment)
+
         }
 
         // 🎨 Hook into the ComposeView inside the layout

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="90dp"
+                android:startColor="#80D1C4E9"
+            android:endColor="#00D1C4E9" /> <!-- Transparent fade -->
+        </shape>
+    </item>
+</layer-list>

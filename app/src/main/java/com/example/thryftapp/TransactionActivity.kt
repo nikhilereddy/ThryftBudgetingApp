@@ -1,14 +1,23 @@
 package com.example.thryftapp
 
+import android.Manifest
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.FileProvider
+import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +31,8 @@ class TransactionActivity : AppCompatActivity() {
     private var photoUri: String? = null
     private val PICK_IMAGE_REQUEST = 1
     private var selectedType: String? = null
+    private var selectedIconId: String = "gmd_home"
+    private lateinit var iconPreviewImage: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +41,6 @@ class TransactionActivity : AppCompatActivity() {
         db = AppDatabase.getDatabase(this)
         photoUploadHelper = PhotoUploadHelper(this)
 
-        // Get user ID from Intent or SharedPreferences
         val intentUserId = intent.getIntExtra("USER_ID", -1)
         val prefs = getSharedPreferences("thryft_session", MODE_PRIVATE)
         val sharedUserId = prefs.getInt("user_id", -1)
@@ -40,6 +50,24 @@ class TransactionActivity : AppCompatActivity() {
             Toast.makeText(this, "User ID is invalid", Toast.LENGTH_SHORT).show()
             finish()
             return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "thryft_channel",
+                "Thryft Notifications",
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "Channel for transaction notifications"
+            }
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
+            }
         }
 
         val amountEditText = findViewById<EditText>(R.id.amountEditText)
@@ -52,7 +80,6 @@ class TransactionActivity : AppCompatActivity() {
         val photoPreviewImageView = findViewById<ImageView>(R.id.photoPreviewImageView)
         val saveButton = findViewById<Button>(R.id.saveButton)
 
-        // Setup transaction type spinner
         ArrayAdapter.createFromResource(
             this,
             R.array.transaction_types,
@@ -65,7 +92,6 @@ class TransactionActivity : AppCompatActivity() {
         typeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
                 selectedType = parent.getItemAtPosition(position).toString()
-                Log.d("TransactionActivity", "Selected type: $selectedType")
                 loadCategories(userId, selectedType, categorySpinner)
             }
 
@@ -74,10 +100,32 @@ class TransactionActivity : AppCompatActivity() {
             }
         }
 
+        supportFragmentManager.setFragmentResultListener("icon_picker_result", this) { _, bundle ->
+            val iconId = bundle.getString("selected_icon_id")
+            if (iconId != null) {
+                selectedIconId = iconId
+                iconPreviewImage.setImageDrawable(
+                    IconicsDrawable(this, GoogleMaterial.Icon.valueOf(iconId))
+                )
+            }
+        }
+
         addCategoryButton.setOnClickListener {
             val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_category, null)
             val categoryNameEditText = dialogView.findViewById<EditText>(R.id.categoryNameEditText)
             val categoryTypeSpinner = dialogView.findViewById<Spinner>(R.id.categoryTypeSpinner)
+            val minEditText = dialogView.findViewById<EditText>(R.id.minBudgetEditText)
+            val maxEditText = dialogView.findViewById<EditText>(R.id.maxBudgetEditText)
+            iconPreviewImage = dialogView.findViewById(R.id.iconPreviewImage)
+
+            selectedIconId = "gmd_home"
+            iconPreviewImage.setImageDrawable(
+                IconicsDrawable(this, GoogleMaterial.Icon.valueOf(selectedIconId))
+            )
+
+            iconPreviewImage.setOnClickListener {
+                IconPickerDialogFragment().show(supportFragmentManager, "iconPicker")
+            }
 
             ArrayAdapter.createFromResource(
                 this,
@@ -89,8 +137,8 @@ class TransactionActivity : AppCompatActivity() {
             }
 
             selectedType?.let {
-                val typeIndex = resources.getStringArray(R.array.transaction_types).indexOf(it)
-                if (typeIndex >= 0) categoryTypeSpinner.setSelection(typeIndex)
+                val index = resources.getStringArray(R.array.transaction_types).indexOf(it)
+                if (index >= 0) categoryTypeSpinner.setSelection(index)
             }
 
             AlertDialog.Builder(this)
@@ -99,12 +147,25 @@ class TransactionActivity : AppCompatActivity() {
                 .setPositiveButton("Add") { _, _ ->
                     val name = categoryNameEditText.text.toString()
                     val type = categoryTypeSpinner.selectedItem.toString()
+                    val minBudget = minEditText.text.toString().toDoubleOrNull() ?: 0.0
+                    val maxBudget = maxEditText.text.toString().toDoubleOrNull() ?: 0.0
+
                     if (name.isBlank()) {
                         Toast.makeText(this, "Please enter a category name", Toast.LENGTH_SHORT).show()
                         return@setPositiveButton
                     }
+
                     CoroutineScope(Dispatchers.IO).launch {
-                        db.categoryDao().insertCategory(Category(userId = userId, name = name, type = type))
+                        db.categoryDao().insertCategory(
+                            Category(
+                                userId = userId,
+                                name = name,
+                                type = type,
+                                minBudget = minBudget,
+                                maxBudget = maxBudget,
+                                iconId = selectedIconId
+                            )
+                        )
                         runOnUiThread {
                             Toast.makeText(this@TransactionActivity, "Category added", Toast.LENGTH_SHORT).show()
                             loadCategories(userId, selectedType, categorySpinner)
@@ -134,16 +195,8 @@ class TransactionActivity : AppCompatActivity() {
             val categoryName = categorySpinner.selectedItem?.toString()
             val type = selectedType
 
-            if (amount == null) {
-                Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (categoryName == null) {
-                Toast.makeText(this, "Please select a category or add a new one", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (type == null) {
-                Toast.makeText(this, "Please select a transaction type", Toast.LENGTH_SHORT).show()
+            if (amount == null || categoryName == null || type == null) {
+                Toast.makeText(this, "Please complete all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -162,6 +215,9 @@ class TransactionActivity : AppCompatActivity() {
                 db.transactionDao().insertTransaction(transaction)
                 runOnUiThread {
                     Toast.makeText(this@TransactionActivity, "Transaction saved successfully", Toast.LENGTH_SHORT).show()
+                    if (getSharedPreferences("thryft_session", MODE_PRIVATE).getBoolean("notifications_enabled", true)) {
+                        sendTransactionNotification()
+                    }
                     finish()
                 }
             }
@@ -185,16 +241,22 @@ class TransactionActivity : AppCompatActivity() {
                 )
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 categorySpinner.adapter = adapter
-
-                if (categoryNames.isEmpty()) {
-                    Toast.makeText(
-                        this@TransactionActivity,
-                        "No categories available for $type. Tap 'Add Category' to create one.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
             }
         }
+    }
+
+    private fun sendTransactionNotification() {
+        val builder = NotificationCompat.Builder(this, "thryft_channel")
+            .setSmallIcon(R.drawable.ic_bell)
+            .setContentTitle("Transaction Added")
+            .setContentText("Your new transaction has been recorded.")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        val notificationManager = NotificationManagerCompat.from(this)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return
+        }
+        notificationManager.notify(1001, builder.build())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -220,4 +282,3 @@ class TransactionActivity : AppCompatActivity() {
         }
     }
 }
-

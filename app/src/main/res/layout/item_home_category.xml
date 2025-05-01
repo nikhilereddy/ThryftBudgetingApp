@@ -1,0 +1,72 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/categoryCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_light_card"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_marginBottom="12dp">
+
+    <!-- Header row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+<!--        <ImageView
+            android:id="@+id/categoryIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_transport" />-->
+
+        <TextView
+            android:id="@+id/categoryName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="8dp"
+            android:text="Category"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/viewAllBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View All"
+            android:textColor="@color/purple_500"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Transactions -->
+    <TextView
+        android:id="@+id/transactionLine1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transaction 1"
+        android:paddingTop="8dp" />
+
+    <TextView
+        android:id="@+id/transactionLine2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transaction 2"
+        android:paddingTop="4dp" />
+
+    <!-- Budget status -->
+    <TextView
+        android:id="@+id/budgetStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Left R123.45"
+        android:textSize="12sp"
+        android:paddingTop="6dp" />
+
+    <!-- Progress -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginTop="4dp" />
+</LinearLayout>

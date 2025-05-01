@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/fragment_add_category_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_light_card"
+        android:padding="20dp"
+        android:elevation="4dp">
+
+        <!-- Back Button + Title -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_back"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Category"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_500" />
+        </LinearLayout>
+
+        <!-- Type Radio Buttons -->
+        <RadioGroup
+            android:id="@+id/typeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/expenseRadio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Expenses"
+                android:buttonTint="@color/purple_500"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/incomeRadio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Income"
+                android:buttonTint="@color/purple_500" />
+        </RadioGroup>
+
+        <!-- Category Name -->
+        <EditText
+            android:id="@+id/categoryNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Category Name"
+            android:inputType="text"
+            android:background="@drawable/bg_rounded_edittext"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Min Budget -->
+        <EditText
+            android:id="@+id/minBudgetEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Minimum Budget"
+            android:inputType="numberDecimal"
+            android:background="@drawable/bg_rounded_edittext"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Max Budget -->
+        <EditText
+            android:id="@+id/maxBudgetEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Maximum Budget"
+            android:inputType="numberDecimal"
+            android:background="@drawable/bg_rounded_edittext"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- ✅ Icon Picker Preview -->
+        <ImageView
+            android:id="@+id/iconPreviewImage"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:background="@android:color/darker_gray"
+            android:contentDescription="Selected Icon" />
+
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/saveCategoryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:backgroundTint="@color/purple_500"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</ScrollView>

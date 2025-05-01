@@ -20,5 +20,8 @@ data class Category(
     val id: Int = 0,
     val userId: Int,
     val name: String,
-    val type: String // "INCOME" or "EXPENSE"
+    val type: String, // "INCOME" or "EXPENSE"
+    val minBudget: Double,
+    val maxBudget: Double,
+    val iconId: String // e.g. "ic_baseline_food_bank_24"
 )

@@ -1,10 +1,12 @@
 package com.example.thryftapp
 
+import android.content.Intent
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
+import android.view.WindowInsets
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
@@ -15,10 +17,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.FloatingActionButtonDefaults
@@ -46,6 +52,7 @@ import androidx.compose.ui.graphics.asComposeRenderEffect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -111,7 +118,6 @@ fun MainScreen() {
         isMenuExtended.value = isMenuExtended.value.not()
     }
 }
-
 @Composable
 fun MainScreen(
     renderEffect: androidx.compose.ui.graphics.RenderEffect?,
@@ -122,7 +128,9 @@ fun MainScreen(
     Box(
         Modifier
             .fillMaxSize()
-            .padding(bottom = 24.dp),
+            // Ensure content is not pushed by keyboard
+            .systemBarsPadding() // Respect system bars (status/navigation)
+            .imePadding(), // Add padding for IME (keyboard) to avoid content overlap
         contentAlignment = Alignment.BottomCenter
     ) {
         CustomBottomNavigation()
@@ -143,7 +151,6 @@ fun MainScreen(
         )
     }
 }
-
 @Composable
 fun Circle(color: Color, animationProgress: Float) {
     val animationValue = sin(PI * animationProgress).toFloat()
@@ -160,24 +167,83 @@ fun Circle(color: Color, animationProgress: Float) {
             )
     )
 }
-
 @Composable
 fun CustomBottomNavigation() {
     Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
+            .fillMaxWidth()
             .height(80.dp)
             .paint(
                 painter = painterResource(R.drawable.bottom_navigation),
-                contentScale = ContentScale.FillHeight
+                contentScale = ContentScale.FillBounds
             )
-            .padding(horizontal = 40.dp)
+            .padding(horizontal = 24.dp)
+            .border(0.dp, Color.Transparent), // Fix for draw layer
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        listOf(Icons.Filled.CalendarToday, Icons.Filled.Group).map { image ->
-            IconButton(onClick = { }) {
-                Icon(imageVector = image, contentDescription = null, tint = Color.White)
+        val context = LocalContext.current
+
+        // Left two icons
+        IconButton(onClick = {
+            (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, HomeFragment())
+                ?.addToBackStack(null)
+                ?.commit()
+        }) {
+            Icon(
+                painter = painterResource(R.drawable.ic_home),
+                contentDescription = "Home",
+                tint = Color.White,
+                modifier = Modifier.size(30.dp)
+            )
+        }
+
+        IconButton(onClick = { /* Calendar */ }) {
+            Icon(
+                painter = painterResource(R.drawable.ic_calendar),
+                contentDescription = "Calendar",
+                tint = Color.White,
+                modifier = Modifier.size(30.dp)
+
+            )
+        }
+
+        // Center FAB spacer
+        Box(modifier = Modifier.size(56.dp)) { }
+
+        // Right two icons
+        IconButton(onClick = { /* Achievements */ }) {
+            Icon(
+                painter = painterResource(R.drawable.ic_trophy),
+                contentDescription = "Trophy",
+                tint = Color.White,
+                modifier = Modifier.size(30.dp)
+
+            )
+        }
+
+        IconButton(onClick = {
+            // Navigate to menu/settings
+            (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, MenuFragment())
+                ?.addToBackStack(null)
+                ?.commit()
+        }) {
+            IconButton(onClick = {
+                (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_container, ProfileFragment())
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_profile),
+                    contentDescription = "Home",
+                    tint = Color.White,
+                    modifier = Modifier.size(30.dp)
+                )
             }
+
         }
     }
 }
@@ -195,9 +261,9 @@ fun FabGroup(
             .padding(bottom = DEFAULT_PADDING.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
-
+        val context = LocalContext.current
         AnimatedFab(
-            icon = Icons.Default.PhotoCamera,
+            icon = Icons.Default.Add,
             modifier = Modifier
                 .padding(
                     PaddingValues(
@@ -205,8 +271,11 @@ fun FabGroup(
                         end = 210.dp
                     ) * FastOutSlowInEasing.transform(0f, 0.8f, animationProgress)
                 ),
-            opacity = LinearEasing.transform(0.2f, 0.7f, animationProgress)
-        )
+            opacity = LinearEasing.transform(0.2f, 0.7f, animationProgress),
+            onClick = {
+                val intent = Intent(context, TransactionActivity::class.java)
+                context.startActivity(intent)
+            })
 
         AnimatedFab(
             icon = Icons.Default.Settings,
@@ -217,6 +286,7 @@ fun FabGroup(
             ),
             opacity = LinearEasing.transform(0.3f, 0.8f, animationProgress)
         )
+
 
         AnimatedFab(
             icon = Icons.Default.ShoppingCart,
