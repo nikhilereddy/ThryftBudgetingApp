@@ -2,23 +2,51 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/white"
-    android:padding="16dp"
-
-    >
+    android:paddingBottom="100dp">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Title and Back Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Search Options"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:paddingBottom="12dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_light_card"
+            android:padding="16dp"
+            android:elevation="4dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Back Button -->
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_back"
+                android:layout_marginEnd="12dp"
+                android:layout_gravity="start"
+                android:padding="8dp" />
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search"
+                android:textSize="20sp"
+                android:layout_marginTop="6dp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_500"
+                android:layout_marginBottom="12dp" />
+        </LinearLayout>
+
+
 
         <RadioGroup
             android:id="@+id/searchOptionGroup"
@@ -37,7 +65,6 @@
                 android:layout_height="wrap_content"
                 android:text="Category Totals" />
         </RadioGroup>
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,6 +98,7 @@
                 android:layout_height="wrap_content"
                 android:text="Expense" />
         </RadioGroup>
+
         <EditText
             android:id="@+id/fromDateEditText"
             android:layout_width="match_parent"
@@ -82,6 +110,7 @@
             android:background="@drawable/bg_light_card"
             android:padding="12dp"
             android:layout_marginTop="16dp"/>
+
         <EditText
             android:id="@+id/toDateEditText"
             android:layout_width="match_parent"
@@ -89,7 +118,6 @@
             android:hint="To Date"
             android:focusable="false"
             android:textColor="@color/blackk"
-
             android:clickable="true"
             android:background="@drawable/bg_light_card"
             android:padding="12dp"
