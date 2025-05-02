@@ -19,6 +19,8 @@ import androidx.room.Dao import androidx.room.Insert import androidx.room.Query
     @Query("SELECT * FROM categories WHERE id = :categoryId")
     fun getCategoryById(categoryId: Int): Category?
 
+    @Query("SELECT name FROM categories WHERE id = :categoryId LIMIT 1")
+    fun getCategoryNameById(categoryId: Int): String?
 
 }
 

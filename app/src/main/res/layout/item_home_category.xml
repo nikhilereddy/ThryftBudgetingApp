@@ -5,7 +5,9 @@
     android:background="@drawable/bg_light_card"
     android:orientation="vertical"
     android:padding="16dp"
-    android:layout_marginBottom="12dp">
+    android:layout_marginBottom="12dp"
+    android:paddingBottom="80dp"
+    >
 
     <!-- Header row -->
     <LinearLayout

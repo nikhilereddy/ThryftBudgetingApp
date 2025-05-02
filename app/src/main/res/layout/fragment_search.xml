@@ -1,117 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#F5F5F5"
-    android:padding="16dp">
+    android:background="@color/white"
+    android:padding="16dp"
 
-    <!-- Header -->
+    >
+
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:background="#FFFFFF"
-        android:elevation="4dp"
-        app:cardCornerRadius="8dp">
-
-        <ImageView
-            android:id="@+id/backButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_back"
-            android:contentDescription="Back"
-            android:padding="8dp" />
+        android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Search Transactions"
-            android:textSize="20sp"
+            android:text="Search Options"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#212121"
-            android:gravity="center_vertical"
-            android:layout_marginStart="8dp" />
+            android:paddingBottom="12dp" />
+
+        <RadioGroup
+            android:id="@+id/searchOptionGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radioTransactions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transactions" />
+
+            <RadioButton
+                android:id="@+id/radioCategories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category Totals" />
+        </RadioGroup>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transaction Type"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <RadioGroup
+            android:id="@+id/transactionTypeGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/typeAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Both"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/typeIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Income" />
+
+            <RadioButton
+                android:id="@+id/typeExpense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expense" />
+        </RadioGroup>
+        <EditText
+            android:id="@+id/fromDateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="From Date"
+            android:focusable="false"
+            android:textColor="@color/blackk"
+            android:clickable="true"
+            android:background="@drawable/bg_light_card"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"/>
+        <EditText
+            android:id="@+id/toDateEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="To Date"
+            android:focusable="false"
+            android:textColor="@color/blackk"
+
+            android:clickable="true"
+            android:background="@drawable/bg_light_card"
+            android:padding="12dp"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/purple_500"
+            android:textColor="@android:color/white"/>
+
+        <LinearLayout
+            android:id="@+id/searchResultsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:paddingBottom="100dp"/>
     </LinearLayout>
-
-    <!-- Date Range Selection -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/startDateLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:boxBackgroundMode="outline"
-        app:boxCornerRadiusBottomEnd="8dp"
-        app:boxCornerRadiusBottomStart="8dp"
-        app:boxCornerRadiusTopEnd="8dp"
-        app:boxCornerRadiusTopStart="8dp"
-        app:boxStrokeColor="#4CAF50"
-        app:hintTextColor="#4CAF50">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/startDateEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Start Date (YYYY-MM-DD)"
-            android:inputType="date"
-            android:focusable="false"
-            android:backgroundTint="#4CAF50"
-            android:padding="12dp"
-            android:textColor="#212121" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/endDateLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:boxBackgroundMode="outline"
-        app:boxCornerRadiusBottomEnd="8dp"
-        app:boxCornerRadiusBottomStart="8dp"
-        app:boxCornerRadiusTopEnd="8dp"
-        app:boxCornerRadiusTopStart="8dp"
-        app:boxStrokeColor="#4CAF50"
-        app:hintTextColor="#4CAF50">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/endDateEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="End Date (YYYY-MM-DD)"
-            android:inputType="date"
-            android:focusable="false"
-            android:backgroundTint="#4CAF50"
-            android:padding="12dp"
-            android:textColor="#212121" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Search"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#4CAF50"
-        app:cornerRadius="8dp"
-        android:layout_marginTop="16dp" />
-
-    <!-- Tab Layout -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:tabIndicatorColor="#4CAF50"
-        app:tabSelectedTextColor="#4CAF50"
-        app:tabTextColor="#757575" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-</LinearLayout>
+</ScrollView>

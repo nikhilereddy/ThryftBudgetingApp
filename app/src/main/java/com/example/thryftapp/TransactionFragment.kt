@@ -2,6 +2,7 @@ package com.example.thryftapp
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -28,6 +29,21 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
         // Back Button click listener
         view.findViewById<ImageView>(R.id.backButton)?.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()  // This will pop the current fragment from the back stack
+        }
+        val searchButton = view.findViewById<Button>(R.id.searchButton)
+
+        val analyticsButton = view.findViewById<Button>(R.id.analyticsButton)
+        searchButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, SearchFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+        analyticsButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AnalyticsFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         // Assume userId is stored in shared preferences

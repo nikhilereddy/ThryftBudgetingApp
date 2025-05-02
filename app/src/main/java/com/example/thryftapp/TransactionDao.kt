@@ -17,4 +17,7 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE categoryId = :categoryId AND userId = :userId ORDER BY date DESC")
     fun getTransactionsByCategory(categoryId: Int, userId: Int): List<Transaction>
 
+    @Query("SELECT * FROM transactions WHERE date BETWEEN :fromDate AND :toDate")
+    fun getTransactionsBetweenDates(fromDate: Long, toDate: Long): List<Transaction>
+
 }

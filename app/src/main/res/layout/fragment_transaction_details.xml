@@ -59,7 +59,31 @@
                 android:textColor="@color/blackk" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Transaction Type Radio Group -->
+        <!-- Description Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeColor="#4CAF50"
+            app:hintTextColor="#4CAF50">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description"
+                android:inputType="text"
+                android:backgroundTint="@color/purple_100"
+                android:padding="12dp"
+                android:textColor="@color/blackk" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Transaction Type -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -106,7 +130,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="16dp"
-            android:background="@color/blackk"
+            android:background="@color/whitee"
             android:padding="12dp"
             android:elevation="2dp"
             app:cardCornerRadius="8dp">
@@ -116,7 +140,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/blackk"
+                android:textColor="@color/whitee"
                 android:backgroundTint="@color/purple_100"
                 android:padding="8dp"
                 android:spinnerMode="dropdown" />
@@ -180,7 +204,7 @@
                 android:layout_height="wrap_content"
                 android:text="Clear Photo"
                 android:textColor="@color/blackk"
-              app:cornerRadius="8dp"
+                app:cornerRadius="8dp"
                 android:layout_marginTop="8dp" />
         </LinearLayout>
 

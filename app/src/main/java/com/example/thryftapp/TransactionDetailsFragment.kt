@@ -93,6 +93,7 @@ class TransactionDetailsFragment : Fragment() {
         val addCategoryButton = view.findViewById<Button>(R.id.addCategoryButton)
         val photoPreviewImageView = view.findViewById<ImageView>(R.id.photoPreviewImageView)
         val saveButton = view.findViewById<Button>(R.id.saveButton)
+        val description = view.findViewById<EditText>(R.id.descriptionEditText)
 
         // Back button listener
         backButton.setOnClickListener {
@@ -214,6 +215,7 @@ class TransactionDetailsFragment : Fragment() {
         // Save button listener
         saveButton.setOnClickListener {
             val amount = amountEditText.text.toString().toDoubleOrNull()
+            val description = description.text.toString()
             val categoryName = categorySpinner.selectedItem?.toString()
             val type = selectedType
 
@@ -229,7 +231,7 @@ class TransactionDetailsFragment : Fragment() {
                     categoryId = category?.id,
                     amount = amount,
                     type = type,
-                    description = "", // Description field removed from XML, setting empty
+                    description = description, // Description field removed from XML, setting empty
                     photoUri = photoUri,
                     date = Date(),
                     createdAt = Date()
