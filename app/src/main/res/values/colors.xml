@@ -27,5 +27,5 @@
     <color name="red">#8B0000</color> <!-- Red color for negative amounts -->
     <color name="green">#006400</color> <!-- Green color for positive amounts -->
     <color name="rwhite">#FFFFFFFF</color>
-
+    <color name="whiteeEe">#FF000000</color>
 </resources>

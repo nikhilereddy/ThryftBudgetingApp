@@ -45,8 +45,8 @@
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
-            app:boxStrokeColor="#4CAF50"
-            app:hintTextColor="#4CAF50">
+            app:boxStrokeColor="@color/purple_500"
+            app:hintTextColor="@color/whiteeEe">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/amountEditText"
@@ -56,7 +56,7 @@
                 android:inputType="numberDecimal"
                 android:backgroundTint="@color/purple_100"
                 android:padding="12dp"
-                android:textColor="@color/blackk" />
+                android:textColor="@color/whiteeEe" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Description Input -->
@@ -69,8 +69,8 @@
             app:boxCornerRadiusBottomStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:boxCornerRadiusTopStart="8dp"
-            app:boxStrokeColor="#4CAF50"
-            app:hintTextColor="#4CAF50">
+            app:boxStrokeColor="@color/purple_500"
+            app:hintTextColor="@color/whiteeEe">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/descriptionEditText"
@@ -80,7 +80,7 @@
                 android:inputType="text"
                 android:backgroundTint="@color/purple_100"
                 android:padding="12dp"
-                android:textColor="@color/blackk" />
+                android:textColor="@color/whiteeEe" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Transaction Type -->
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:text="Transaction Type"
             android:textSize="16sp"
-            android:textColor="#757575"
+            android:textColor="@color/whiteeEe"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp" />
 
@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/whitee"
+            android:textColor="@color/whiteeEe"
             android:padding="12dp"
             android:elevation="2dp"
             app:cardCornerRadius="8dp">
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Income"
-                android:textColor="@color/blackk"
+                android:textColor="@color/whiteeEe"
                 android:backgroundTint="@color/purple_100"
                 android:padding="8dp" />
 
@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Expense"
-                android:textColor="@color/blackk"
+                android:textColor="@color/whiteeEe"
                 android:backgroundTint="@color/purple_100"
                 android:padding="8dp" />
         </RadioGroup>
@@ -140,7 +140,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/whitee"
+                android:textColor="@color/blackk"
                 android:backgroundTint="@color/purple_100"
                 android:padding="8dp"
                 android:spinnerMode="dropdown" />
@@ -162,7 +162,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add Photo (Optional)"
-            android:textColor="@color/blackk"
+            android:textColor="@color/whiteeEe"
             android:backgroundTint="@color/purple_100"
             android:layout_marginTop="16dp"
             android:padding="8dp" />
