@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- 🟦 Top Row: Logo + Menu Icon -->
+    <!--Top Row: Logo + Menu Icon -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
             android:layout_marginHorizontal="4dp"/>
     </LinearLayout>
 
-    <!-- 🟪 Total Balance Card -->
+    <!--Total Balance Card -->
     <LinearLayout
         android:id="@+id/summaryCard"
         android:layout_width="match_parent"
@@ -99,7 +99,7 @@
             android:contentDescription="Right Arrow" />
     </LinearLayout>
 
-    <!-- 💸 Expense and Income Summary -->
+    <!--Expense and Income Summary -->
     <LinearLayout
         android:id="@+id/incomeExpenseRow"
         android:layout_width="match_parent"
@@ -167,7 +167,7 @@
         android:layout_marginBottom="16dp"
         android:progressDrawable="@drawable/custom_progress" />
 
-    <!-- 📦 Category Section (Dynamic) -->
+    <!--Category Section (Dynamic) -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="522dp"

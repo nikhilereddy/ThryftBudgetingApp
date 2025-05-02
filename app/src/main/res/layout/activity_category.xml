@@ -34,7 +34,6 @@
         android:inputType="numberDecimal"
         android:layout_marginTop="8dp" />
 
-    <!-- 🔥 Icon Preview Image (clickable) -->
     <ImageView
         android:id="@+id/iconPreviewImage"
         android:layout_width="48dp"

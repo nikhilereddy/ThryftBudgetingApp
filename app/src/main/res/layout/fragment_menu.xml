@@ -14,7 +14,7 @@ android:padding="16dp"
 android:clipToPadding="false"
 android:elevation="4dp">
 
-<!-- 🔙 Back Button -->
+<!-- Back Button -->
 <ImageView
     android:id="@+id/backButton"
     android:layout_width="40dp"
@@ -24,7 +24,7 @@ android:elevation="4dp">
     android:layout_marginBottom="20dp"
     android:padding="8dp" />
 
-<!-- 🟣 Organisation -->
+<!-- Organisation -->
 <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -63,7 +63,7 @@ android:layout_marginBottom="12dp" />
     android:background="@color/purple_200"
 android:layout_marginBottom="12dp" />
 
-<!-- 🟣 Transactions -->
+<!--Transactions -->
 <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -101,7 +101,7 @@ android:layout_marginBottom="12dp" />
     android:background="@color/purple_200"
 android:layout_marginBottom="12dp" />
 
-<!-- 🟣 Settings -->
+<!--Settings -->
 <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

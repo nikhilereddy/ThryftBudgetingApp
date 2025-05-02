@@ -30,35 +30,36 @@ class MenuFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_menu, container, false)
+        return inflater.inflate(R.layout.fragment_menu, container, false) //inflate layout
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 🔙 Back button
+        //back button click
         view.findViewById<ImageView>(R.id.backButton)?.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
+
         val exportTransactionsBtn = view.findViewById<LinearLayout>(R.id.exportTransactions)
         exportTransactionsBtn.setOnClickListener {
-            exportTransactionsToPdf()
+            exportTransactionsToPdf() //export to pdf
         }
-
 
         view.findViewById<LinearLayout>(R.id.openCategories)?.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, CategoryListFragment())
+                .replace(R.id.fragment_container, CategoryListFragment()) //navigate to category list
                 .addToBackStack(null)
                 .commit()
         }
 
-        // 🔜 Add more menu item click listeners here if needed
+        //add more menu click listeners if needed
     }
+
     private fun exportTransactionsToPdf() {
-        val db = AppDatabase.getDatabase(requireContext())
-        val prefs = requireContext().getSharedPreferences("thryft_session", 0)
-        val userId = prefs.getInt("user_id", -1)
+        val db = AppDatabase.getDatabase(requireContext()) //get db
+        val prefs = requireContext().getSharedPreferences("thryft_session", 0) //get prefs
+        val userId = prefs.getInt("user_id", -1) //get user id
 
         if (userId == -1) {
             Toast.makeText(requireContext(), "Invalid user", Toast.LENGTH_SHORT).show()
@@ -66,7 +67,7 @@ class MenuFragment : Fragment() {
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val transactions = db.transactionDao().getAllTransactions(userId)
+            val transactions = db.transactionDao().getAllTransactions(userId) //get transactions
             if (transactions.isEmpty()) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "No transactions to export", Toast.LENGTH_SHORT).show()
@@ -74,7 +75,7 @@ class MenuFragment : Fragment() {
                 return@launch
             }
 
-            val pdfFile = PdfExportHelper(requireContext()).createTransactionPdf(transactions)
+            val pdfFile = PdfExportHelper(requireContext()).createTransactionPdf(transactions) //generate pdf
 
             val uri = FileProvider.getUriForFile(
                 requireContext(),
@@ -100,9 +101,8 @@ class MenuFragment : Fragment() {
                     NotificationManager.IMPORTANCE_DEFAULT
                 )
                 val manager = requireContext().getSystemService(NotificationManager::class.java)
-                manager.createNotificationChannel(channel)
+                manager.createNotificationChannel(channel) //create channel
             }
-
 
             val notification = NotificationCompat.Builder(requireContext(), channelId)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -115,16 +115,16 @@ class MenuFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     if (requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1002)
+                        requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1002) //request permission
                         return@withContext
                     }
                 }
 
-                NotificationManagerCompat.from(requireContext()).notify(1001, notification)
+                NotificationManagerCompat.from(requireContext()).notify(1001, notification) //show notification
             }
-
         }
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -132,7 +132,7 @@ class MenuFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1002 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            exportTransactionsToPdf()
+            exportTransactionsToPdf() //retry export
         }
     }
 }

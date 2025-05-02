@@ -3,10 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Background image filling the screen proportionally -->
-
-    <!-- Get Started button -->
-
     <ImageView
         android:id="@+id/backgroundImagee"
         android:layout_width="0dp"

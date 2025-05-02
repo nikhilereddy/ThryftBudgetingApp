@@ -26,17 +26,17 @@ import java.util.*
 
 class TransactionActivity : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
-    private lateinit var photoUploadHelper: PhotoUploadHelper
-    private var photoUri: String? = null
-    private val PICK_IMAGE_REQUEST = 1
-    private var selectedType: String? = null
-    private var selectedIconId: String = "gmd_home"
-    private lateinit var iconPreviewImage: ImageView
+    private lateinit var db: AppDatabase //database instance
+    private lateinit var photoUploadHelper: PhotoUploadHelper //helper for saving photo
+    private var photoUri: String? = null //store photo path
+    private val PICK_IMAGE_REQUEST = 1 //request code for image picker
+    private var selectedType: String? = null //selected transaction type
+    private var selectedIconId: String = "gmd_home" //default icon
+    private lateinit var iconPreviewImage: ImageView //icon preview
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_transaction)
+        setContentView(R.layout.activity_transaction) //set layout
 
         db = AppDatabase.getDatabase(this)
         photoUploadHelper = PhotoUploadHelper(this)
@@ -52,6 +52,7 @@ class TransactionActivity : AppCompatActivity() {
             return
         }
 
+        //create notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 "thryft_channel",
@@ -64,6 +65,7 @@ class TransactionActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
 
+        //request notification permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
@@ -80,6 +82,7 @@ class TransactionActivity : AppCompatActivity() {
         val photoPreviewImageView = findViewById<ImageView>(R.id.photoPreviewImageView)
         val saveButton = findViewById<Button>(R.id.saveButton)
 
+        //setup type spinner
         ArrayAdapter.createFromResource(
             this,
             R.array.transaction_types,
@@ -89,6 +92,7 @@ class TransactionActivity : AppCompatActivity() {
             typeSpinner.adapter = adapter
         }
 
+        //type selection listener
         typeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
                 selectedType = parent.getItemAtPosition(position).toString()
@@ -100,6 +104,7 @@ class TransactionActivity : AppCompatActivity() {
             }
         }
 
+        //icon picker result
         supportFragmentManager.setFragmentResultListener("icon_picker_result", this) { _, bundle ->
             val iconId = bundle.getString("selected_icon_id")
             if (iconId != null) {
@@ -110,6 +115,7 @@ class TransactionActivity : AppCompatActivity() {
             }
         }
 
+        //add category dialog
         addCategoryButton.setOnClickListener {
             val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_category, null)
             val categoryNameEditText = dialogView.findViewById<EditText>(R.id.categoryNameEditText)
@@ -176,12 +182,14 @@ class TransactionActivity : AppCompatActivity() {
                 .show()
         }
 
+        //upload photo
         uploadPhotoButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
 
+        //clear photo
         clearPhotoButton.setOnClickListener {
             photoUri = null
             photoPreviewImageView.setImageDrawable(null)
@@ -189,6 +197,7 @@ class TransactionActivity : AppCompatActivity() {
             Toast.makeText(this, "Photo cleared", Toast.LENGTH_SHORT).show()
         }
 
+        //save transaction
         saveButton.setOnClickListener {
             val amount = amountEditText.text.toString().toDoubleOrNull()
             val description = descriptionEditText.text.toString()

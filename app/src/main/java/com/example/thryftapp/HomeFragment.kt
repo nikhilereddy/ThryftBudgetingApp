@@ -17,33 +17,35 @@ import java.text.DecimalFormat
 
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var db: AppDatabase
-    private val decimalFormat = DecimalFormat("#,##0.00")
+    private var _binding: FragmentHomeBinding? = null //binding reference
+    private val binding get() = _binding!! //non-null binding
+    private lateinit var db: AppDatabase //database reference
+    private val decimalFormat = DecimalFormat("#,##0.00") //format currency
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false) //inflate view binding
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        db = AppDatabase.getDatabase(requireContext())
-        val prefs = requireContext().getSharedPreferences("thryft_session", 0)
-        val userId = prefs.getInt("user_id", -1)
+        db = AppDatabase.getDatabase(requireContext()) //init db
+        val prefs = requireContext().getSharedPreferences("thryft_session", 0) //get prefs
+        val userId = prefs.getInt("user_id", -1) //get user id
 
-        // ✅ Hamburger Menu Click Handler
+        //menu icon click opens menu fragment
         binding.menuIcon.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MenuFragment())
                 .addToBackStack(null)
                 .commit()
         }
+
+        //arrow icon click opens transactions fragment
         binding.arrow.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, TransactionFragment())
@@ -51,85 +53,77 @@ class HomeFragment : Fragment() {
                 .commit()
         }
 
-
-        // 🔄 Load transaction and category data
+        //load data from db
         lifecycleScope.launch(Dispatchers.IO) {
-            val transactions = db.transactionDao().getAllTransactions(userId)
-            val categories = db.categoryDao().getAllCategories(userId)
+            val transactions = db.transactionDao().getAllTransactions(userId) //get transactions
+            val categories = db.categoryDao().getAllCategories(userId) //get categories
 
-            val income = transactions.filter { it.type == "INCOME" }.sumOf { it.amount }
-            val expense = transactions.filter { it.type == "EXPENSE" }.sumOf { it.amount }
-            val balance = income - expense
+            val income = transactions.filter { it.type == "INCOME" }.sumOf { it.amount } //sum income
+            val expense = transactions.filter { it.type == "EXPENSE" }.sumOf { it.amount } //sum expenses
+            val balance = income - expense //calculate balance
 
             launch(Dispatchers.Main) {
-                binding.totalBalanceText.text = "R ${decimalFormat.format(balance)}"
-                binding.incomeText.text = "Income\nR ${decimalFormat.format(income)}"
-                binding.expenseText.text = "Expense\nR ${decimalFormat.format(expense)}"
+                binding.totalBalanceText.text = "R ${decimalFormat.format(balance)}" //set balance text
+                binding.incomeText.text = "Income\nR ${decimalFormat.format(income)}" //set income text
+                binding.expenseText.text = "Expense\nR ${decimalFormat.format(expense)}" //set expense text
 
-                val progress = if (income > 0) (expense / income * 100).toInt().coerceIn(0, 100) else 0
-                binding.balanceProgressBar.progress = progress
+                val progress = if (income > 0) (expense / income * 100).toInt().coerceIn(0, 100) else 0 //calculate progress
+                binding.balanceProgressBar.progress = progress //set progress bar
 
-                binding.categoryContainer.removeAllViews()
+                binding.categoryContainer.removeAllViews() //clear container
 
                 categories.forEach { category ->
-                    val categoryView = layoutInflater.inflate(R.layout.item_home_category, binding.categoryContainer, false)
+                    val categoryView = layoutInflater.inflate(R.layout.item_home_category, binding.categoryContainer, false) //inflate category view
 
-                    val categoryTransactions = transactions.filter { it.categoryId == category.id }
-                    val totalSpent = categoryTransactions.sumOf { it.amount }
+                    val categoryTransactions = transactions.filter { it.categoryId == category.id } //filter category transactions
+                    val totalSpent = categoryTransactions.sumOf { it.amount } //sum spent
                     val min = category.minBudget ?: 0.0
                     val max = category.maxBudget ?: 0.0
 
-                    // Set category name
-                    categoryView.findViewById<TextView>(R.id.categoryName).text = category.name
+                    categoryView.findViewById<TextView>(R.id.categoryName).text = category.name //set category name
 
-                    // Set budget status
                     val status = when {
                         totalSpent > max -> "Exceeded by R${decimalFormat.format(totalSpent - max)}"
                         totalSpent < min -> "Underspent by R${decimalFormat.format(min - totalSpent)}"
                         else -> "Left R${decimalFormat.format(max - totalSpent)}"
                     }
 
-                    categoryView.findViewById<TextView>(R.id.budgetStatus).text = status
+                    categoryView.findViewById<TextView>(R.id.budgetStatus).text = status //set budget status
 
-                    // Set progress bar
-                    val progressPercent = if (max > 0) (totalSpent / max * 100).toInt().coerceIn(0, 100) else 0
-                    categoryView.findViewById<ProgressBar>(R.id.progressBar).progress = progressPercent
+                    val progressPercent = if (max > 0) (totalSpent / max * 100).toInt().coerceIn(0, 100) else 0 //calculate progress
+                    categoryView.findViewById<ProgressBar>(R.id.progressBar).progress = progressPercent //set progress bar
 
-                    // Set transaction lines
                     val lines = categoryTransactions.take(2).map {
                         "${it.description} - R${decimalFormat.format(it.amount)}"
                     }
 
-                    categoryView.findViewById<TextView>(R.id.transactionLine1).text = lines.getOrNull(0) ?: ""
-                    categoryView.findViewById<TextView>(R.id.transactionLine2).text = lines.getOrNull(1) ?: ""
+                    categoryView.findViewById<TextView>(R.id.transactionLine1).text = lines.getOrNull(0) ?: "" //first transaction line
+                    categoryView.findViewById<TextView>(R.id.transactionLine2).text = lines.getOrNull(1) ?: "" //second transaction line
 
-                    // Set category icon dynamically
-                    setIconForCategory(category, categoryView)
+                    setIconForCategory(category, categoryView) //set icon for category
 
-                    // Set the View All button listener
                     categoryView.findViewById<TextView>(R.id.viewAllBtn).setOnClickListener {
-                        // Pass the category ID to CategoryListFragment using arguments or a bundle
-                        val categoryId = category.id  // Assuming category.id is the unique identifier for the category
+                        val categoryId = category.id
 
                         val categoryListFragment = CategoryTransactionsFragment().apply {
                             arguments = Bundle().apply {
-                                putInt("category_id", categoryId)  // Pass the category ID to the new fragment
+                                putInt("category_id", categoryId) //pass category id
                             }
                         }
 
-                        // Use FragmentTransaction to replace the current fragment with CategoryListFragment
                         requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, categoryListFragment)  // Replace the current fragment with CategoryListFragment
-                            .addToBackStack(null)  // Optional: This will allow the user to go back to this fragment
-                            .commit()  // Commit the transaction
+                            .replace(R.id.fragment_container, categoryListFragment)
+                            .addToBackStack(null)
+                            .commit()
                     }
-                    binding.categoryContainer.addView(categoryView)
+
+                    binding.categoryContainer.addView(categoryView) //add to container
                 }
             }
         }
     }
 
-    // Function to set the icon dynamically for each category
+    //function to set icon for category
     private fun setIconForCategory(category: Category, categoryView: View) {
         val iconImageView = categoryView.findViewById<ImageView>(R.id.categoryIcon)
 
@@ -138,12 +132,12 @@ class HomeFragment : Fragment() {
             val drawable = IconicsDrawable(requireContext(), iconEnum)
             iconImageView.setImageDrawable(drawable)
         } catch (e: Exception) {
-            iconImageView.setImageResource(R.drawable.ic_lock)  // Fallback icon if invalid icon ID
+            iconImageView.setImageResource(R.drawable.ic_lock) //fallback icon
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _binding = null //clear binding
     }
 }

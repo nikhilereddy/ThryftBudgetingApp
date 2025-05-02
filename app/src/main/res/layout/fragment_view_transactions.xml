@@ -107,7 +107,7 @@
         android:fillViewport="true"
         android:paddingBottom="100dp">
 
-        <!-- ListView for Transactions -->
+        <!--ListView for Transactions -->
         <LinearLayout
             android:id="@+id/transactionListView"
             android:layout_width="match_parent"

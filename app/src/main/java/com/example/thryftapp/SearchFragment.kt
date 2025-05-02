@@ -15,23 +15,23 @@ import java.util.*
 
 class SearchFragment : Fragment() {
 
-    private lateinit var fromDateEditText: EditText
-    private lateinit var toDateEditText: EditText
-    private lateinit var searchOptionGroup: RadioGroup
-    private lateinit var searchButton: Button
-    private lateinit var resultsContainer: LinearLayout
-    private lateinit var db: AppDatabase
-    private lateinit var transactionTypeGroup: RadioGroup
+    private lateinit var fromDateEditText: EditText //from date input
+    private lateinit var toDateEditText: EditText //to date input
+    private lateinit var searchOptionGroup: RadioGroup //search option radio
+    private lateinit var searchButton: Button //search button
+    private lateinit var resultsContainer: LinearLayout //search results view
+    private lateinit var db: AppDatabase //db instance
+    private lateinit var transactionTypeGroup: RadioGroup //transaction type filter
 
-    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) //date format
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_search, container, false)
+        val view = inflater.inflate(R.layout.fragment_search, container, false) //inflate layout
 
-        db = AppDatabase.getDatabase(requireContext())
+        db = AppDatabase.getDatabase(requireContext()) //init db
 
         fromDateEditText = view.findViewById(R.id.fromDateEditText)
         toDateEditText = view.findViewById(R.id.toDateEditText)
@@ -40,10 +40,10 @@ class SearchFragment : Fragment() {
         resultsContainer = view.findViewById(R.id.searchResultsContainer)
         transactionTypeGroup = view.findViewById(R.id.transactionTypeGroup)
 
-        setupDatePickers()
+        setupDatePickers() //setup date pickers
 
         searchButton.setOnClickListener {
-            performSearch()
+            performSearch() //trigger search
         }
 
         return view
@@ -66,8 +66,8 @@ class SearchFragment : Fragment() {
             ).show()
         }
 
-        fromDateEditText.setOnClickListener { showDatePicker(fromDateEditText) }
-        toDateEditText.setOnClickListener { showDatePicker(toDateEditText) }
+        fromDateEditText.setOnClickListener { showDatePicker(fromDateEditText) } //from date
+        toDateEditText.setOnClickListener { showDatePicker(toDateEditText) } //to date
     }
 
     private fun performSearch() {
@@ -91,18 +91,16 @@ class SearchFragment : Fragment() {
             return
         }
 
-        // Adjust end date to include 23:59:59
         val toDateEndOfDay = Calendar.getInstance().apply {
             time = toDateRaw
             set(Calendar.HOUR_OF_DAY, 23)
             set(Calendar.MINUTE, 59)
             set(Calendar.SECOND, 59)
             set(Calendar.MILLISECOND, 999)
-        }.time
+        }.time //adjust end date
 
         val selectedOption = searchOptionGroup.checkedRadioButtonId
-
-        resultsContainer.removeAllViews()
+        resultsContainer.removeAllViews() //clear previous results
 
         when (selectedOption) {
             R.id.radioTransactions -> fetchTransactions(fromDate.time, toDateEndOfDay.time)
@@ -115,9 +113,8 @@ class SearchFragment : Fragment() {
         val selectedType = when (transactionTypeGroup.checkedRadioButtonId) {
             R.id.typeIncome -> "Income"
             R.id.typeExpense -> "Expense"
-            else -> null // Both
+            else -> null //both types
         }
-
 
         lifecycleScope.launch(Dispatchers.IO) {
             val allTxns = db.transactionDao().getTransactionsBetweenDates(fromMillis, toMillis)
@@ -129,7 +126,6 @@ class SearchFragment : Fragment() {
             }
 
             launch(Dispatchers.Main) {
-
                 if (filteredTxns.isEmpty()) {
                     addNoResultsText("No ${selectedType ?: "transactions"} found in this period.")
                     return@launch
@@ -147,7 +143,6 @@ class SearchFragment : Fragment() {
                     amountText.text = "R${txn.amount}"
 
                     resultsContainer.addView(itemView)
-
                 }
             }
         }
@@ -157,9 +152,8 @@ class SearchFragment : Fragment() {
         val selectedType = when (transactionTypeGroup.checkedRadioButtonId) {
             R.id.typeIncome -> "Income"
             R.id.typeExpense -> "Expense"
-            else -> null // Both
+            else -> null //both types
         }
-
 
         lifecycleScope.launch(Dispatchers.IO) {
             val allTransactions = db.transactionDao().getTransactionsBetweenDates(fromMillis, toMillis)
@@ -171,20 +165,17 @@ class SearchFragment : Fragment() {
             }
 
             val grouped = filteredTransactions.groupBy { it.categoryId }
-
             val categoryDao = db.categoryDao()
             val totalsWithNames = mutableMapOf<String, Double>()
 
             for ((categoryId, txns) in grouped) {
                 if (categoryId == null) continue
-
                 val categoryName = categoryDao.getCategoryNameById(categoryId) ?: "Unknown"
                 val total = txns.sumOf { it.amount }
                 totalsWithNames[categoryName] = total
             }
 
             launch(Dispatchers.Main) {
-
                 if (totalsWithNames.isEmpty()) {
                     addNoResultsText("No ${selectedType ?: "Income/Expense"} category totals found in this period.")
                     return@launch
@@ -200,7 +191,6 @@ class SearchFragment : Fragment() {
                     categoryTotalText.text = "R$total"
 
                     resultsContainer.addView(itemView)
-
                 }
             }
         }
@@ -216,5 +206,4 @@ class SearchFragment : Fragment() {
         }
         resultsContainer.addView(noResultsText)
     }
-
 }

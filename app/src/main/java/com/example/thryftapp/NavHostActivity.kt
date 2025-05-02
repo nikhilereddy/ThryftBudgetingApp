@@ -19,22 +19,21 @@ class NavHostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_navhost)
+        setContentView(R.layout.activity_navhost) //set layout
 
-        // 🧠 Load your HomeFragment
+        //load home fragment
         val fragment = HomeFragment()
         supportFragmentManager.commit {
-            replace(R.id.fragment_container, fragment)
-
+            replace(R.id.fragment_container, fragment) //load into container
         }
 
-        // 🎨 Hook into the ComposeView inside the layout
+        //setup compose view for fluid nav bar
         findViewById<ComposeView>(R.id.compose_view).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed) //cleanup strategy
             setContent {
                 FluidBottomNavigationTheme {
                     Box(modifier = Modifier.fillMaxSize()) {
-                        MainScreen() // your fluid nav bar composable
+                        MainScreen() //fluid nav bar composable
                     }
                 }
             }

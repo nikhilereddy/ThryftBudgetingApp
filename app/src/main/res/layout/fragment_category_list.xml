@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:padding="16dp">
 
-    <!-- 🔹 Header Row -->
+    <!-- Header Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             android:tooltipText="Add Category" />
     </LinearLayout>
 
-    <!-- 🔹 Type Filter -->
+    <!-- Type Filter -->
     <RadioGroup
         android:id="@+id/typeFilterGroup"
         android:layout_width="match_parent"
@@ -75,7 +75,7 @@
             android:buttonTint="@color/purple_500" />
     </RadioGroup>
 
-    <!-- 🔹 Search -->
+    <!--Search -->
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
@@ -88,7 +88,7 @@
         android:drawableStart="@android:drawable/ic_menu_search"
         android:layout_marginBottom="16dp" />
 
-    <!-- 🔹 List -->
+    <!-- List -->
     <ListView
         android:id="@+id/categoryListView"
         android:layout_width="match_parent"

@@ -21,14 +21,17 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //ui components
         val transactionLayout = view.findViewById<LinearLayout>(R.id.transactionListView)
         val header = view.findViewById<TextView>(R.id.categoryHeader)
         val totalBalanceText = view.findViewById<TextView>(R.id.totalBalanceText)
 
+        //back button
         view.findViewById<ImageView>(R.id.backButton)?.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+        //search and analytics navigation
         val searchButton = view.findViewById<Button>(R.id.searchButton)
         val analyticsButton = view.findViewById<Button>(R.id.analyticsButton)
 
@@ -45,6 +48,7 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
                 .commit()
         }
 
+        //get user id
         val prefs = requireContext().getSharedPreferences("thryft_session", 0)
         val userId = prefs.getInt("user_id", -1)
         if (userId == -1) {
@@ -54,17 +58,21 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
 
         db = AppDatabase.getDatabase(requireContext())
 
+        //fetch transactions
         lifecycleScope.launch(Dispatchers.IO) {
             val transactions = db.transactionDao().getAllTransactions(userId)
 
+            //group by date
             val groupedTransactions = transactions.groupBy {
                 dateFormat.format(it.date)
             }
 
+            //calculate balance
             val income = transactions.filter { it.type == "INCOME" }.sumOf { it.amount }
             val expense = transactions.filter { it.type == "EXPENSE" }.sumOf { it.amount }
             val totalBalance = income - expense
 
+            //combine date headers and items
             val formattedTransactions = mutableListOf<Any>()
             groupedTransactions.forEach { (date, transactionList) ->
                 formattedTransactions.add(date)
@@ -72,17 +80,21 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
             }
 
             launch(Dispatchers.Main) {
+                //update ui
                 header.text = "Transactions"
                 totalBalanceText.text = "R ${(totalBalance)}"
                 transactionLayout.removeAllViews()
 
+                //loop over items
                 formattedTransactions.forEach { item ->
                     if (item is String) {
+                        //date header
                         val dateHeaderView = layoutInflater.inflate(R.layout.list_item_date_header, transactionLayout, false)
                         val dateHeaderTextView = dateHeaderView.findViewById<TextView>(R.id.dateHeader)
                         dateHeaderTextView.text = item
                         transactionLayout.addView(dateHeaderView)
                     } else if (item is Transaction) {
+                        //transaction view
                         val transactionView = layoutInflater.inflate(R.layout.list_item_transaction, transactionLayout, false)
                         val transactionName = transactionView.findViewById<TextView>(R.id.transactionName)
                         val transactionDate = transactionView.findViewById<TextView>(R.id.transactionDate)
@@ -92,12 +104,14 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
                         transactionDate.text = dateFormat.format(item.date)
                         transactionAmount.text = "R ${item.amount}"
 
+                        //color based on type
                         if (item.type == "EXPENSE") {
                             transactionAmount.setTextColor(resources.getColor(R.color.red))
                         } else {
                             transactionAmount.setTextColor(resources.getColor(R.color.green))
                         }
 
+                        //view details dialog
                         transactionView.setOnClickListener {
                             val dialog = Dialog(requireContext())
                             dialog.setContentView(R.layout.dialog_transaction_details)
@@ -112,6 +126,7 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
                             dateText.text = "Date: ${dateFormat.format(item.date)}"
                             amtText.text = "Amount: R${item.amount}"
 
+                            //handle image preview
                             if (!item.photoUri.isNullOrEmpty()) {
                                 image.setImageURI(Uri.parse(item.photoUri))
                                 image.visibility = View.VISIBLE
@@ -124,17 +139,19 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
                             val editBtn = dialog.findViewById<Button>(R.id.dialogEditBtn)
                             val deleteBtn = dialog.findViewById<Button>(R.id.dialogDeleteBtn)
 
+                            //edit not implemented
                             editBtn.setOnClickListener {
                                 Toast.makeText(requireContext(), "Edit not implemented yet, Feature coming soon!", Toast.LENGTH_SHORT).show()
                             }
 
+                            //delete transaction
                             deleteBtn.setOnClickListener {
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     db.transactionDao().deleteTransaction(item)
                                     withContext(Dispatchers.Main) {
                                         Toast.makeText(requireContext(), "Transaction deleted", Toast.LENGTH_SHORT).show()
                                         dialog.dismiss()
-                                        reloadTransactions() // You must define this method to refresh the list
+                                        reloadTransactions() //refresh list
                                     }
                                 }
                             }
@@ -147,6 +164,8 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
             }
         }
     }
+
+    //reload transactions after delete
     private fun reloadTransactions() {
         val transactionLayout = view?.findViewById<LinearLayout>(R.id.transactionListView) ?: return
         val header = view?.findViewById<TextView>(R.id.categoryHeader)
@@ -173,6 +192,7 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
             }
 
             launch(Dispatchers.Main) {
+                //update ui again
                 header?.text = "Transactions"
                 totalBalanceText?.text = "R ${totalBalance}"
                 transactionLayout.removeAllViews()
@@ -195,13 +215,10 @@ class TransactionFragment : Fragment(R.layout.fragment_view_transactions) {
                             resources.getColor(if (item.type == "EXPENSE") R.color.red else R.color.green)
                         )
 
-                        // Reuse dialog logic if needed
                         transactionLayout.addView(transactionView)
                     }
                 }
             }
         }
     }
-
-
 }

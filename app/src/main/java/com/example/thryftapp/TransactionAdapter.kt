@@ -15,35 +15,36 @@ class TransactionAdapter(context: Context, private val transactions: List<Any>) 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val item = getItem(position)
 
-        return if (item is String) {  // This is a date header
+        return if (item is String) { //date header
             val dateHeaderView = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_date_header, parent, false)
             val dateHeaderText = dateHeaderView.findViewById<TextView>(R.id.dateHeader)
-            dateHeaderText.text = item  // Set the date header text
+            dateHeaderText.text = item //set header text
             dateHeaderView
-        } else if (item is Transaction) {  // This is a transaction item
+        } else if (item is Transaction) { //transaction item
             val transactionView = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_transaction, parent, false)
             val name = transactionView.findViewById<TextView>(R.id.transactionName)
-            val date = transactionView.findViewById<TextView>(R.id.transactionDate) // Updated to 'transactionDate'
+            val date = transactionView.findViewById<TextView>(R.id.transactionDate)
             val amount = transactionView.findViewById<TextView>(R.id.transactionAmount)
 
             name.text = item.description
 
-            // Format the date and set it to the TextView
+            //format date
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(item.date)
-            date.text = formattedDate // Set the formatted date
+            date.text = formattedDate
 
+            //amount formatting
             amount.text = if (item.amount > 0) "+R${item.amount}" else "R${item.amount}"
-            // Style the amount text based on whether it’s income or expense
+
+            //set color based on type
             if (item.amount < 0) {
-                amount.setTextColor(ContextCompat.getColor(context, R.color.red)) // Set red for negative amounts (expenses)
+                amount.setTextColor(ContextCompat.getColor(context, R.color.red)) //expense = red
             } else {
-                amount.setTextColor(ContextCompat.getColor(context, R.color.green)) // Set green for positive amounts (income)
+                amount.setTextColor(ContextCompat.getColor(context, R.color.green)) //income = green
             }
 
             transactionView
         } else {
-            super.getView(position, convertView, parent)
+            super.getView(position, convertView, parent) //fallback
         }
     }
 }
-//correct version

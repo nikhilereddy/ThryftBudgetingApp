@@ -14,17 +14,17 @@ import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySignupBinding
+    private lateinit var binding: ActivitySignupBinding //view binding
     private val userDao by lazy {
-        AppDatabase.getDatabase(this).userDao()
+        AppDatabase.getDatabase(this).userDao() //get user dao
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(binding.root) //set layout
 
-        // --------- Buttons ----------
+        //go to login screen
         val goToLogin = {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
@@ -32,7 +32,7 @@ class SignUpActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener { goToLogin() }
         binding.signInLink.setOnClickListener { goToLogin() }
 
-        // --------- Sign Up button ----------
+        //signup button click handler
         binding.signupButton.setOnClickListener {
             val name = binding.fullNameEditText.text.toString().trim()
             val email = binding.emailEditText.text.toString().trim().lowercase(Locale.ROOT)
@@ -47,16 +47,16 @@ class SignUpActivity : AppCompatActivity() {
                     toast("Passwords don’t match")
                 }
                 else -> {
-                    createUser(name, email, password)
+                    createUser(name, email, password) //create user
                 }
             }
         }
     }
 
-    /** inserts user in background */
+    //inserts user in background
     private fun createUser(name: String, email: String, password: String) {
         lifecycleScope.launch {
-            // 1. check if email already registered
+            //check if email already registered
             val existing = withContext(Dispatchers.IO) {
                 userDao.getUserByEmail(email)
             }
@@ -65,9 +65,9 @@ class SignUpActivity : AppCompatActivity() {
                 return@launch
             }
 
-            val date = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
+            val date = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date()) //timestamp
 
-            // 2. insert into database
+            //insert new user
             val newUser = User(
                 name = name,
                 email = email,
@@ -85,6 +85,6 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show() //show toast
     }
 }

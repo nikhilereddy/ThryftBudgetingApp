@@ -15,26 +15,26 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 class GraphHelper(private val context: Context) {
 
     fun setupExpenseVsIncomeChart(chart: BarChart, transactions: List<Transaction>) {
-        val incomeEntries = mutableListOf<BarEntry>()
-        val expenseEntries = mutableListOf<BarEntry>()
+        val incomeEntries = mutableListOf<BarEntry>() //bar entries for income
+        val expenseEntries = mutableListOf<BarEntry>() //bar entries for expense
 
-        // Aggregate data
-        val income = transactions.filter { it.type == "INCOME" }.sumOf { it.amount }
-        val expense = transactions.filter { it.type == "EXPENSE" }.sumOf { it.amount }
+        //aggregate data
+        val income = transactions.filter { it.type == "INCOME" }.sumOf { it.amount } //sum income
+        val expense = transactions.filter { it.type == "EXPENSE" }.sumOf { it.amount } //sum expense
 
         incomeEntries.add(BarEntry(0f, income.toFloat()))
-        expenseEntries.add(BarEntry(1f, expense.toFloat())) // Set index to 1 for expense
+        expenseEntries.add(BarEntry(1f, expense.toFloat())) //set index to 1 for expense
 
         val incomeDataSet = BarDataSet(incomeEntries, "Income").apply {
-            color = ColorTemplate.COLORFUL_COLORS[0]
+            color = ColorTemplate.COLORFUL_COLORS[0] //set income color
         }
         val expenseDataSet = BarDataSet(expenseEntries, "Expense").apply {
-            color = ColorTemplate.COLORFUL_COLORS[1]
+            color = ColorTemplate.COLORFUL_COLORS[1] //set expense color
         }
 
-        val barData = BarData(incomeDataSet, expenseDataSet)
+        val barData = BarData(incomeDataSet, expenseDataSet) //combine datasets
 
-        // Set properties for grouped bars
+        //set properties for grouped bars
         val groupSpace = 0.2f
         val barSpace = 0.05f
         val barWidth = 0.35f
@@ -47,35 +47,34 @@ class GraphHelper(private val context: Context) {
             axisMaximum = 1f
             granularity = 1f
             isGranularityEnabled = true
-            valueFormatter = IndexAxisValueFormatter(listOf("Income", "Expense")) // Custom labels
-            textSize = 12f // Adjust text size if needed
+            valueFormatter = IndexAxisValueFormatter(listOf("Income", "Expense")) //custom labels
+            textSize = 12f //adjust text size
         }
 
         chart.groupBars(0f, groupSpace, barSpace)
         chart.setFitBars(true)
         chart.description.isEnabled = false
-        chart.legend.isEnabled = true // Enable legend
+        chart.legend.isEnabled = true //enable legend
         chart.animateY(1000)
         chart.invalidate()
     }
 
-
     fun setupPieChartByCategory(pieChart: PieChart, transactions: List<Transaction>, categories: List<Category>) {
-        val entries = mutableListOf<PieEntry>()
+        val entries = mutableListOf<PieEntry>() //pie chart entries
 
-        val categoryMap = categories.associateBy { it.id }
+        val categoryMap = categories.associateBy { it.id } //map category by id
 
         val totalsByCategory = transactions.groupBy { it.categoryId }.mapValues { entry ->
-            entry.value.sumOf { it.amount }
+            entry.value.sumOf { it.amount } //sum totals by category
         }
 
         for ((catId, total) in totalsByCategory) {
-            val categoryName = categoryMap[catId]?.name ?: "Unknown"
-            entries.add(PieEntry(total.toFloat(), categoryName))
+            val categoryName = categoryMap[catId]?.name ?: "Unknown" //get category name
+            entries.add(PieEntry(total.toFloat(), categoryName)) //add entry
         }
 
-        val dataSet = PieDataSet(entries, "By Category")
-        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        val dataSet = PieDataSet(entries, "By Category") //create dataset
+        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList() //set colors
         val data = PieData(dataSet)
         data.setValueTextSize(14f)
 
@@ -84,7 +83,4 @@ class GraphHelper(private val context: Context) {
         pieChart.animateY(1000)
         pieChart.invalidate()
     }
-
-
-
 }

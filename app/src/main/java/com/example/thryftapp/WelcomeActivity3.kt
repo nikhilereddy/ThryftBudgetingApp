@@ -11,26 +11,26 @@ import com.example.thryftapp.databinding.ActivityWelcome3Binding
 
 class WelcomeActivity3 : AppCompatActivity() {
 
-    private lateinit var binding: ActivityWelcome3Binding
-    private val handler = Handler(Looper.getMainLooper())
-    private lateinit var nudgeRunnable: Runnable
+    private lateinit var binding: ActivityWelcome3Binding //view binding
+    private val handler = Handler(Looper.getMainLooper()) //main thread handler
+    private lateinit var nudgeRunnable: Runnable //for checkbox nudge loop
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWelcome3Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Hide initially
+        //hide elements initially
         binding.consentGroup.visibility = View.INVISIBLE
         binding.nextButton.visibility = View.INVISIBLE
 
-        // 1.5s delay to reveal consent group
+        //after 1.5s show consent group with fade
         Handler(Looper.getMainLooper()).postDelayed({
             val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
             binding.consentGroup.visibility = View.VISIBLE
             binding.consentGroup.startAnimation(fadeIn)
 
-            // 2s later show button with slide
+            //after another 0.5s show button with slide
             Handler(Looper.getMainLooper()).postDelayed({
                 val slideIn = AnimationUtils.loadAnimation(this, R.anim.btn_slide_fade_in)
                 binding.nextButton.visibility = View.VISIBLE
@@ -39,7 +39,7 @@ class WelcomeActivity3 : AppCompatActivity() {
 
         }, 1500)
 
-        // Checkbox behavior
+        //checkbox logic to enable/disable button
         binding.checkboxAgree.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 handler.removeCallbacks(nudgeRunnable)
@@ -51,7 +51,7 @@ class WelcomeActivity3 : AppCompatActivity() {
             }
         }
 
-        // Next button click
+        //on button click save flag and go to signup
         binding.nextButton.setOnClickListener {
             if (binding.checkboxAgree.isChecked) {
                 val prefs = getSharedPreferences("thryft_prefs", MODE_PRIVATE)
@@ -62,7 +62,7 @@ class WelcomeActivity3 : AppCompatActivity() {
             }
         }
 
-        // Nudge animation
+        //nudge the checkbox every 3s if not checked
         nudgeRunnable = object : Runnable {
             override fun run() {
                 if (!binding.checkboxAgree.isChecked) {
@@ -77,6 +77,6 @@ class WelcomeActivity3 : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacks(nudgeRunnable)
+        handler.removeCallbacks(nudgeRunnable) //stop nudge on destroy
     }
 }

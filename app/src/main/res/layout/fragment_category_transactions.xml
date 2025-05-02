@@ -15,7 +15,7 @@
         android:layout_marginBottom="10dp"
         android:padding="8dp" />
 
-    <!-- 🟣 Organisation -->
+    <!--Organisation -->
 
     <!-- Transactions List -->
     <TextView

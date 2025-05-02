@@ -25,7 +25,7 @@ class ExpensePieFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_expense_pie, container, false) //inflate layout
 
-        pieChart = view.findViewById(R.id.pieChart) //find pie chart
+        pieChart = view.findViewById(R.id.expenseByCategoryChart) //find pie chart
         db = AppDatabase.getDatabase(requireContext()) //init db
         graphHelper = GraphHelper(requireContext()) //init graph helper
 

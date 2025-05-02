@@ -14,37 +14,12 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.FloatingActionButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AutoGraph
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Chat
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -61,14 +36,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thryftapp.theme.FluidBottomNavigationTheme
 import com.example.thryftapp.ui.theme.DEFAULT_PADDING
-
 import kotlin.math.PI
 import kotlin.math.sin
 
 @RequiresApi(Build.VERSION_CODES.S)
 private fun getRenderEffect(): RenderEffect {
-    val blurEffect = RenderEffect
-        .createBlurEffect(80f, 80f, Shader.TileMode.MIRROR)
+    val blurEffect = RenderEffect.createBlurEffect(80f, 80f, Shader.TileMode.MIRROR) //blur effect
 
     val alphaMatrix = RenderEffect.createColorFilterEffect(
         ColorMatrixColorFilter(
@@ -83,77 +56,58 @@ private fun getRenderEffect(): RenderEffect {
         )
     )
 
-    return RenderEffect
-        .createChainEffect(alphaMatrix, blurEffect)
+    return RenderEffect.createChainEffect(alphaMatrix, blurEffect) //combine effects
 }
 
 @Composable
 fun MainScreen() {
-    val isMenuExtended = remember { mutableStateOf(false) }
+    val isMenuExtended = remember { mutableStateOf(false) } //track fab state
 
     val fabAnimationProgress by animateFloatAsState(
         targetValue = if (isMenuExtended.value) 1f else 0f,
-        animationSpec = tween(
-            durationMillis = 1000,
-            easing = LinearEasing
-        )
+        animationSpec = tween(1000, easing = LinearEasing)
     )
 
     val clickAnimationProgress by animateFloatAsState(
         targetValue = if (isMenuExtended.value) 1f else 0f,
-        animationSpec = tween(
-            durationMillis = 400,
-            easing = LinearEasing
-        )
+        animationSpec = tween(400, easing = LinearEasing)
     )
 
     val renderEffect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        getRenderEffect().asComposeRenderEffect()
-    } else {
-        null
-    }
+        getRenderEffect().asComposeRenderEffect() //apply blur on supported versions
+    } else null
 
     MainScreen(
         renderEffect = renderEffect,
         fabAnimationProgress = fabAnimationProgress,
         clickAnimationProgress = clickAnimationProgress
     ) {
-        isMenuExtended.value = isMenuExtended.value.not()
+        isMenuExtended.value = !isMenuExtended.value //toggle state
     }
 }
+
 @Composable
 fun MainScreen(
     renderEffect: androidx.compose.ui.graphics.RenderEffect?,
     fabAnimationProgress: Float = 0f,
     clickAnimationProgress: Float = 0f,
-    toggleAnimation: () -> Unit = { }
+    toggleAnimation: () -> Unit = {}
 ) {
     Box(
         Modifier
             .fillMaxSize()
-            // Ensure content is not pushed by keyboard
-            .systemBarsPadding() // Respect system bars (status/navigation)
-            .imePadding(), // Add padding for IME (keyboard) to avoid content overlap
+            .systemBarsPadding()
+            .imePadding(),
         contentAlignment = Alignment.BottomCenter
     ) {
         CustomBottomNavigation()
-        Circle(
-            color = MaterialTheme.colors.primary.copy(alpha = 0.5f),
-            animationProgress = 0.5f
-        )
-
+        Circle(color = MaterialTheme.colors.primary.copy(alpha = 0.5f), animationProgress = 0.5f)
         FabGroup(renderEffect = renderEffect, animationProgress = fabAnimationProgress)
-        FabGroup(
-            renderEffect = null,
-            animationProgress = fabAnimationProgress,
-            toggleAnimation = toggleAnimation
-        )
-        Circle(
-            color = Color.White,
-            animationProgress = clickAnimationProgress
-        )
+        FabGroup(renderEffect = null, animationProgress = fabAnimationProgress, toggleAnimation = toggleAnimation)
+        Circle(color = Color.White, animationProgress = clickAnimationProgress)
     }
 }
+
 @Composable
 fun Circle(color: Color, animationProgress: Float) {
     val animationValue = sin(PI * animationProgress).toFloat()
@@ -163,62 +117,43 @@ fun Circle(color: Color, animationProgress: Float) {
             .padding(DEFAULT_PADDING.dp)
             .size(56.dp)
             .scale(2 - animationValue)
-            .border(
-                width = 2.dp,
-                color = color.copy(alpha = color.alpha * animationValue),
-                shape = CircleShape
-            )
+            .border(2.dp, color.copy(alpha = color.alpha * animationValue), CircleShape)
     )
 }
+
 @Composable
 fun CustomBottomNavigation() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
-            .paint(
-                painter = painterResource(R.drawable.bottom_navigation),
-                contentScale = ContentScale.FillBounds
-            )
+            .paint(painterResource(R.drawable.bottom_navigation), contentScale = ContentScale.FillBounds)
             .padding(horizontal = 24.dp)
-            .border(0.dp, Color.Transparent), // Fix for draw layer
+            .border(0.dp, Color.Transparent),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         val context = LocalContext.current
 
-        // Left two icons
         IconButton(onClick = {
             (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_container, HomeFragment())
                 ?.addToBackStack(null)
                 ?.commit()
         }) {
-            Icon(
-                painter = painterResource(R.drawable.ic_home),
-                contentDescription = "Home",
-                tint = Color.White,
-                modifier = Modifier.size(30.dp)
-            )
+            Icon(painter = painterResource(R.drawable.ic_home), contentDescription = "Home", tint = Color.White, modifier = Modifier.size(30.dp))
         }
 
-            IconButton(onClick = {
-                (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_container, TransactionFragment())
-                    ?.addToBackStack(null)
-                    ?.commit()
-            }) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_calendar),
-                    contentDescription = "Home",
-                    tint = Color.White,
-                    modifier = Modifier.size(30.dp)
-                )
+        IconButton(onClick = {
+            (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, TransactionFragment())
+                ?.addToBackStack(null)
+                ?.commit()
+        }) {
+            Icon(painter = painterResource(R.drawable.ic_calendar), contentDescription = "Home", tint = Color.White, modifier = Modifier.size(30.dp))
         }
-        // Center FAB spacer
-        Box(modifier = Modifier.size(56.dp)) { }
 
-        // Right two icons
+        Box(modifier = Modifier.size(56.dp)) {} //fab space
 
         IconButton(onClick = {
             (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
@@ -226,16 +161,10 @@ fun CustomBottomNavigation() {
                 ?.addToBackStack(null)
                 ?.commit()
         }) {
-            Icon(
-                painter = painterResource(R.drawable.ic_trophy),
-                contentDescription = "Home",
-                tint = Color.White,
-                modifier = Modifier.size(30.dp)
-            )
+            Icon(painter = painterResource(R.drawable.ic_trophy), contentDescription = "Home", tint = Color.White, modifier = Modifier.size(30.dp))
         }
 
         IconButton(onClick = {
-            // Navigate to menu/settings
             (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_container, MenuFragment())
                 ?.addToBackStack(null)
@@ -247,14 +176,8 @@ fun CustomBottomNavigation() {
                     ?.addToBackStack(null)
                     ?.commit()
             }) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_profile),
-                    contentDescription = "Home",
-                    tint = Color.White,
-                    modifier = Modifier.size(30.dp)
-                )
+                Icon(painter = painterResource(R.drawable.ic_profile), contentDescription = "Home", tint = Color.White, modifier = Modifier.size(30.dp))
             }
-
         }
     }
 }
@@ -263,7 +186,7 @@ fun CustomBottomNavigation() {
 fun FabGroup(
     animationProgress: Float = 0f,
     renderEffect: androidx.compose.ui.graphics.RenderEffect? = null,
-    toggleAnimation: () -> Unit = { }
+    toggleAnimation: () -> Unit = {}
 ) {
     Box(
         Modifier
@@ -273,87 +196,58 @@ fun FabGroup(
         contentAlignment = Alignment.BottomCenter
     ) {
         val context = LocalContext.current
+
         AnimatedFab(
             icon = Icons.Default.Add,
-            modifier = Modifier
-                .padding(
-                    PaddingValues(
-                        bottom = 72.dp,
-                        end = 210.dp
-                    ) * FastOutSlowInEasing.transform(0f, 0.8f, animationProgress)
-                ),
-            opacity = LinearEasing.transform(0.2f, 0.7f, animationProgress),
-            onClick = {
-                // Replace Intent with FragmentTransaction
-                val fragment = TransactionDetailsFragment() // Create a new instance of the fragment
-
-                // Access the current activity and replace the fragment dynamically
-                val activity = context as? AppCompatActivity
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_container, fragment)  // Replace with the appropriate container ID
-                    ?.addToBackStack(null)  // Optional: to allow fragment back navigation
-                    ?.commit()
-            }
-        )
-
+            modifier = Modifier.padding(
+                PaddingValues(bottom = 72.dp, end = 210.dp) * FastOutSlowInEasing.transform(0f, 0.8f, animationProgress)
+            ),
+            opacity = LinearEasing.transform(0.2f, 0.7f, animationProgress)
+        ) {
+            val fragment = TransactionDetailsFragment()
+            (context as? AppCompatActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, fragment)
+                ?.addToBackStack(null)
+                ?.commit()
+        }
 
         AnimatedFab(
             icon = Icons.Default.AutoGraph,
             modifier = Modifier.padding(
-                PaddingValues(
-                    bottom = 88.dp,
-                ) * FastOutSlowInEasing.transform(0.1f, 0.9f, animationProgress)
+                PaddingValues(bottom = 88.dp) * FastOutSlowInEasing.transform(0.1f, 0.9f, animationProgress)
             ),
-            opacity = LinearEasing.transform(0.3f, 0.8f, animationProgress),
-            onClick = {
-                // Replace Intent with FragmentTransaction
-                val fragment = AnalyticsFragment() // Create a new instance of the fragment
-
-                // Access the current activity and replace the fragment dynamically
-                val activity = context as? AppCompatActivity
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_container, fragment)  // Replace with the appropriate container ID
-                    ?.addToBackStack(null)  // Optional: to allow fragment back navigation
-                    ?.commit()
-            }
-        )
+            opacity = LinearEasing.transform(0.3f, 0.8f, animationProgress)
+        ) {
+            val fragment = AnalyticsFragment()
+            (context as? AppCompatActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, fragment)
+                ?.addToBackStack(null)
+                ?.commit()
+        }
 
         AnimatedFab(
             icon = Icons.Default.Chat,
             modifier = Modifier.padding(
-                PaddingValues(
-                    bottom = 72.dp,
-                    start = 210.dp
-                ) * FastOutSlowInEasing.transform(0.2f, 1.0f, animationProgress)
+                PaddingValues(bottom = 72.dp, start = 210.dp) * FastOutSlowInEasing.transform(0.2f, 1.0f, animationProgress)
             ),
-            opacity = LinearEasing.transform(0.4f, 0.9f, animationProgress),
-            onClick = {
-                // Replace Intent with FragmentTransaction
-                val fragment = ComingSoonFragment() // Create a new instance of the fragment
-
-                // Access the current activity and replace the fragment dynamically
-                val activity = context as? AppCompatActivity
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_container, fragment)  // Replace with the appropriate container ID
-                    ?.addToBackStack(null)  // Optional: to allow fragment back navigation
-                    ?.commit()
-            }
-        )
+            opacity = LinearEasing.transform(0.4f, 0.9f, animationProgress)
+        ) {
+            val fragment = ComingSoonFragment()
+            (context as? AppCompatActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, fragment)
+                ?.addToBackStack(null)
+                ?.commit()
+        }
 
         AnimatedFab(
-            modifier = Modifier
-                .scale(1f - LinearEasing.transform(0.5f, 0.85f, animationProgress)),
+            modifier = Modifier.scale(1f - LinearEasing.transform(0.5f, 0.85f, animationProgress))
         )
 
         AnimatedFab(
             icon = Icons.Default.Add,
-            modifier = Modifier
-                .rotate(
-                    225 * FastOutSlowInEasing
-                        .transform(0.35f, 0.65f, animationProgress)
-                ),
-            onClick = toggleAnimation,
-            backgroundColor = Color.Transparent
+            modifier = Modifier.rotate(225 * FastOutSlowInEasing.transform(0.35f, 0.65f, animationProgress)),
+            backgroundColor = Color.Transparent,
+            onClick = toggleAnimation
         )
     }
 }
@@ -368,20 +262,15 @@ fun AnimatedFab(
 ) {
     FloatingActionButton(
         onClick = onClick,
-        elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
+        elevation = FloatingActionButtonDefaults.elevation(0.dp),
         backgroundColor = backgroundColor,
         modifier = modifier.scale(1.25f)
     ) {
         icon?.let {
-            Icon(
-                imageVector = it,
-                contentDescription = null,
-                tint = Color.White.copy(alpha = opacity)
-            )
+            Icon(imageVector = it, contentDescription = null, tint = Color.White.copy(alpha = opacity))
         }
     }
 }
-
 
 @Composable
 @Preview(device = "id:pixel_4a", showBackground = true, backgroundColor = 0xFF3A2F6E)

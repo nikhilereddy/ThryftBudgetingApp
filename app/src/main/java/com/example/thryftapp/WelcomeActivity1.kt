@@ -11,14 +11,14 @@ import com.example.thryftapp.databinding.ActivityWelcome1Binding
 
 class WelcomeActivity1 : AppCompatActivity() {
 
-    private lateinit var binding: ActivityWelcome1Binding
+    private lateinit var binding: ActivityWelcome1Binding //view binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWelcome1Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Wait 2 seconds then animate slide-in
+        //wait 1.5 seconds then show and animate the button
         Handler(Looper.getMainLooper()).postDelayed({
             binding.getStartedBtn.visibility = View.VISIBLE
             binding.getStartedBtn.startAnimation(
@@ -26,19 +26,20 @@ class WelcomeActivity1 : AppCompatActivity() {
             )
         }, 1500)
 
-        // After another 4s (6s total), start pulsing nudge
+        //start pulsing effect after 5s to draw attention
         val pulse = AnimationUtils.loadAnimation(this, R.anim.btn_pulse)
         val handler = Handler(Looper.getMainLooper())
         val pulseRunnable = object : Runnable {
             override fun run() {
                 binding.getStartedBtn.startAnimation(pulse)
-                handler.postDelayed(this, 3000)
+                handler.postDelayed(this, 3000) //pulse every 3s
             }
         }
         handler.postDelayed(pulseRunnable, 5000)
 
+        //on click move to next welcome screen
         binding.getStartedBtn.setOnClickListener {
-            handler.removeCallbacks(pulseRunnable)
+            handler.removeCallbacks(pulseRunnable) //stop pulse
             startActivity(Intent(this, WelcomeActivity2::class.java))
             finish()
         }

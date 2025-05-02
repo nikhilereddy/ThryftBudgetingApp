@@ -13,7 +13,7 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
-        <!-- Income vs Expense (Summary) -->
+        <!--Income vs Expense (Summary) -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:layout_height="350dp"
             android:layout_marginBottom="32dp" />
 
-        <!-- Expense by Category -->
+        <!--Expense by Category -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:layout_height="350dp"
             android:layout_marginBottom="32dp" />
 
-        <!-- Bar Chart -->
+        <!--Bar Chart -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
