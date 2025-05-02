@@ -40,8 +40,10 @@
         android:id="@+id/transactionAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="-R550"
+        android:text="-R5500"
         android:textColor="@color/purple_500"
         android:textStyle="bold"
         android:textSize="16sp" />
+
+
 </LinearLayout>

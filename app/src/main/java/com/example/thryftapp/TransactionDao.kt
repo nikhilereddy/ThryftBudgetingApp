@@ -1,6 +1,7 @@
 package com.example.thryftapp
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import java.util.Date
@@ -19,5 +20,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE date BETWEEN :fromDate AND :toDate")
     fun getTransactionsBetweenDates(fromDate: Long, toDate: Long): List<Transaction>
+    @Delete
+     fun deleteTransaction(transaction: Transaction)
 
 }

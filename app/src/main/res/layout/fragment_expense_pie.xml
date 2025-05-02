@@ -1,12 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/white"
-    android:padding="16dp">
+    android:paddingBottom="100dp">
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pieChart"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Income vs Expense (Summary) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Income vs Expense"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/blackk"
+            android:layout_marginBottom="12dp" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/incomeExpensePieChart"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Income by Category -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Income by Category"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/blackk"
+            android:layout_marginBottom="12dp" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/incomeByCategoryChart"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Expense by Category -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expense by Category"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/blackk"
+            android:layout_marginBottom="12dp" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/expenseByCategoryChart"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Bar Chart -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Income vs Expense (Bar)"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/blackk"
+            android:layout_marginBottom="12dp" />
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/categoryBarChart"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_marginBottom="36dp" />
+
+        <!-- Bottom Spacer -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+    </LinearLayout>
+</ScrollView>

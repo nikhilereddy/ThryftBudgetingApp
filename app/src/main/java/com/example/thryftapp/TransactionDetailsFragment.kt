@@ -310,4 +310,4 @@ class TransactionDetailsFragment : Fragment() {
             }
         }
     }
-}
+}//correct version

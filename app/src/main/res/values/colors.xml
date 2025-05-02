@@ -26,4 +26,6 @@
     <color name="purple_5000">#FF6200EE</color>
     <color name="red">#8B0000</color> <!-- Red color for negative amounts -->
     <color name="green">#006400</color> <!-- Green color for positive amounts -->
+    <color name="rwhite">#FFFFFFFF</color>
+
 </resources>

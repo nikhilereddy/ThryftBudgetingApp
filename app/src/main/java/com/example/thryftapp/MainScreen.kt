@@ -34,7 +34,9 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Settings
@@ -200,30 +202,35 @@ fun CustomBottomNavigation() {
             )
         }
 
-        IconButton(onClick = {
-            (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_container, TransactionFragment())
-                ?.addToBackStack(null)
-                ?.commit()
-        }) {
-            Icon(
-                painter = painterResource(R.drawable.ic_calendar),
-                contentDescription = "Home",
-                tint = Color.White,
-                modifier = Modifier.size(30.dp)
-            )
+            IconButton(onClick = {
+                (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_container, TransactionFragment())
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_calendar),
+                    contentDescription = "Home",
+                    tint = Color.White,
+                    modifier = Modifier.size(30.dp)
+                )
         }
         // Center FAB spacer
         Box(modifier = Modifier.size(56.dp)) { }
 
         // Right two icons
-        IconButton(onClick = { /* Achievements */ }) {
+
+        IconButton(onClick = {
+            (context as? NavHostActivity)?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, ComingSoonFragment())
+                ?.addToBackStack(null)
+                ?.commit()
+        }) {
             Icon(
                 painter = painterResource(R.drawable.ic_trophy),
-                contentDescription = "Trophy",
+                contentDescription = "Home",
                 tint = Color.White,
                 modifier = Modifier.size(30.dp)
-
             )
         }
 
@@ -291,25 +298,46 @@ fun FabGroup(
 
 
         AnimatedFab(
-            icon = Icons.Default.Settings,
+            icon = Icons.Default.AutoGraph,
             modifier = Modifier.padding(
                 PaddingValues(
                     bottom = 88.dp,
                 ) * FastOutSlowInEasing.transform(0.1f, 0.9f, animationProgress)
             ),
-            opacity = LinearEasing.transform(0.3f, 0.8f, animationProgress)
+            opacity = LinearEasing.transform(0.3f, 0.8f, animationProgress),
+            onClick = {
+                // Replace Intent with FragmentTransaction
+                val fragment = ComingSoonFragment() // Create a new instance of the fragment
+
+                // Access the current activity and replace the fragment dynamically
+                val activity = context as? AppCompatActivity
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_container, fragment)  // Replace with the appropriate container ID
+                    ?.addToBackStack(null)  // Optional: to allow fragment back navigation
+                    ?.commit()
+            }
         )
 
-
         AnimatedFab(
-            icon = Icons.Default.ShoppingCart,
+            icon = Icons.Default.Chat,
             modifier = Modifier.padding(
                 PaddingValues(
                     bottom = 72.dp,
                     start = 210.dp
                 ) * FastOutSlowInEasing.transform(0.2f, 1.0f, animationProgress)
             ),
-            opacity = LinearEasing.transform(0.4f, 0.9f, animationProgress)
+            opacity = LinearEasing.transform(0.4f, 0.9f, animationProgress),
+            onClick = {
+                // Replace Intent with FragmentTransaction
+                val fragment = ComingSoonFragment() // Create a new instance of the fragment
+
+                // Access the current activity and replace the fragment dynamically
+                val activity = context as? AppCompatActivity
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_container, fragment)  // Replace with the appropriate container ID
+                    ?.addToBackStack(null)  // Optional: to allow fragment back navigation
+                    ?.commit()
+            }
         )
 
         AnimatedFab(

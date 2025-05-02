@@ -44,6 +44,13 @@ class HomeFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+        binding.arrow.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, TransactionFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
 
         // 🔄 Load transaction and category data
         lifecycleScope.launch(Dispatchers.IO) {
@@ -101,11 +108,21 @@ class HomeFragment : Fragment() {
 
                     // Set the View All button listener
                     categoryView.findViewById<TextView>(R.id.viewAllBtn).setOnClickListener {
-                        val intent = Intent(requireContext(), ViewCategoryTransactionsActivity::class.java)
-                        intent.putExtra("category_id", category.id)
-                        startActivity(intent)
-                    }
+                        // Pass the category ID to CategoryListFragment using arguments or a bundle
+                        val categoryId = category.id  // Assuming category.id is the unique identifier for the category
 
+                        val categoryListFragment = CategoryTransactionsFragment().apply {
+                            arguments = Bundle().apply {
+                                putInt("category_id", categoryId)  // Pass the category ID to the new fragment
+                            }
+                        }
+
+                        // Use FragmentTransaction to replace the current fragment with CategoryListFragment
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, categoryListFragment)  // Replace the current fragment with CategoryListFragment
+                            .addToBackStack(null)  // Optional: This will allow the user to go back to this fragment
+                            .commit()  // Commit the transaction
+                    }
                     binding.categoryContainer.addView(categoryView)
                 }
             }
