@@ -20,15 +20,15 @@ import java.util.*
 
 class CategoryTransactionsFragment : Fragment() {
 
-    private lateinit var db: AppDatabase
-    private val formatter = DecimalFormat("#,##0.00")
-    private var categoryId: Int = -1
-    private var userId: Int = -1
+    private lateinit var db: AppDatabase //database reference
+    private val formatter = DecimalFormat("#,##0.00") //format for amount
+    private var categoryId: Int = -1 //holds category id
+    private var userId: Int = -1 //holds user id
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            categoryId = it.getInt("category_id", -1)
+            categoryId = it.getInt("category_id", -1) //get category id from args
         }
     }
 
@@ -36,43 +36,43 @@ class CategoryTransactionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_category_transactions, container, false)
+        return inflater.inflate(R.layout.fragment_category_transactions, container, false) //inflate layout
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<ImageView>(R.id.backButton)?.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.popBackStack() //go back on click
         }
 
-        val header = view.findViewById<TextView>(R.id.categoryHeader)
-        val listView = view.findViewById<ListView>(R.id.transactionListView)
+        val header = view.findViewById<TextView>(R.id.categoryHeader) //header text
+        val listView = view.findViewById<ListView>(R.id.transactionListView) //list view for transactions
 
-        val prefs = requireContext().getSharedPreferences("thryft_session", 0)
-        userId = prefs.getInt("user_id", -1)
+        val prefs = requireContext().getSharedPreferences("thryft_session", 0) //get shared prefs
+        userId = prefs.getInt("user_id", -1) //get user id
 
         if (categoryId == -1 || userId == -1) {
-            Toast.makeText(requireContext(), "Invalid user or category", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Invalid user or category", Toast.LENGTH_SHORT).show() //check for valid input
             return
         }
 
-        db = AppDatabase.getDatabase(requireContext())
+        db = AppDatabase.getDatabase(requireContext()) //initialize db
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val category = db.categoryDao().getCategoryById(categoryId)
-            val transactions = db.transactionDao().getTransactionsByCategory(categoryId, userId)
+            val category = db.categoryDao().getCategoryById(categoryId) //get category
+            val transactions = db.transactionDao().getTransactionsByCategory(categoryId, userId) //get transactions
 
             withContext(Dispatchers.Main) {
                 if (category != null) {
-                    header.text = "Transactions for ${category.name.uppercase(Locale.getDefault())}"
+                    header.text = "Transactions for ${category.name.uppercase(Locale.getDefault())}" //set header
                 }
 
                 if (transactions.isEmpty()) {
                     listView.adapter = ArrayAdapter(
                         requireContext(),
                         android.R.layout.simple_list_item_1,
-                        listOf("No transactions available")
+                        listOf("No transactions available") //show message if none
                     )
                 } else {
                     val items = transactions.map {
@@ -82,7 +82,7 @@ class CategoryTransactionsFragment : Fragment() {
                     listView.adapter = ArrayAdapter(
                         requireContext(),
                         android.R.layout.simple_list_item_1,
-                        items
+                        items //set transaction list
                     )
                 }
             }
@@ -91,10 +91,10 @@ class CategoryTransactionsFragment : Fragment() {
 
     companion object {
         fun newInstance(categoryId: Int): CategoryTransactionsFragment {
-            val fragment = CategoryTransactionsFragment()
-            val args = Bundle()
-            args.putInt("category_id", categoryId)
-            fragment.arguments = args
+            val fragment = CategoryTransactionsFragment() //create new instance
+            val args = Bundle() //bundle args
+            args.putInt("category_id", categoryId) //put category id
+            fragment.arguments = args //set args
             return fragment
         }
     }

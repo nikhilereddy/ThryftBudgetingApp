@@ -39,60 +39,60 @@ import java.io.FileOutputStream
 
 class AnalyticsFragment : Fragment() {
 
-    private lateinit var pieChart: PieChart
-    private lateinit var incomeByCategoryChart: PieChart
-    private lateinit var expenseByCategoryChart: PieChart
-    private lateinit var barChart: BarChart
-    private lateinit var db: AppDatabase
-    private lateinit var graphHelper: GraphHelper
+    private lateinit var pieChart: PieChart //pie chart for income vs expense
+    private lateinit var incomeByCategoryChart: PieChart //pie chart for income by category
+    private lateinit var expenseByCategoryChart: PieChart //pie chart for expense by category
+    private lateinit var barChart: BarChart //bar chart for income vs expense
+    private lateinit var db: AppDatabase //database instance
+    private lateinit var graphHelper: GraphHelper //helper class to setup charts
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_analytics, container, false)
+        val view = inflater.inflate(R.layout.fragment_analytics, container, false) //inflate layout
 
-        pieChart = view.findViewById(R.id.incomeExpensePieChart)
-        incomeByCategoryChart = view.findViewById(R.id.incomeByCategoryChart)
-        expenseByCategoryChart = view.findViewById(R.id.expenseByCategoryChart)
-        barChart = view.findViewById(R.id.categoryBarChart)
+        pieChart = view.findViewById(R.id.incomeExpensePieChart) //find pie chart
+        incomeByCategoryChart = view.findViewById(R.id.incomeByCategoryChart) //find income category chart
+        expenseByCategoryChart = view.findViewById(R.id.expenseByCategoryChart) //find expense category chart
+        barChart = view.findViewById(R.id.categoryBarChart) //find bar chart
 
-        db = AppDatabase.getDatabase(requireContext())
-        graphHelper = GraphHelper(requireContext())
+        db = AppDatabase.getDatabase(requireContext()) //initialize database
+        graphHelper = GraphHelper(requireContext()) //initialize graph helper
 
         view.findViewById<Button>(R.id.exportPdfBtn).setOnClickListener {
             view.postDelayed({
-                exportAnalyticsAsPdf()
-            }, 500) // Ensures layout is complete before bitmap capture
+                exportAnalyticsAsPdf() //export chart as pdf
+            }, 500) //ensures layout is complete
         }
         view.findViewById<ImageView>(R.id.backButton)?.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.popBackStack() //navigate back
         }
 
-        loadAnalytics()
+        loadAnalytics() //load chart data
 
         return view
     }
 
     private fun loadAnalytics() {
-        val userId = getUserIdFromPrefs()
-        if (userId == -1) return
+        val userId = getUserIdFromPrefs() //get user id
+        if (userId == -1) return //exit if user not found
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val transactions = db.transactionDao().getAllTransactions(userId)
-            val categories = db.categoryDao().getAllCategories(userId)
+            val transactions = db.transactionDao().getAllTransactions(userId) //get all transactions
+            val categories = db.categoryDao().getAllCategories(userId) //get all categories
 
-            val incomeTransactions = transactions.filter { it.type.equals("INCOME", true) }
-            val expenseTransactions = transactions.filter { it.type.equals("EXPENSE", true) }
+            val incomeTransactions = transactions.filter { it.type.equals("INCOME", true) } //filter income
+            val expenseTransactions = transactions.filter { it.type.equals("EXPENSE", true) } //filter expenses
 
-            val incomeTotal = incomeTransactions.sumOf { it.amount }
-            val expenseTotal = expenseTransactions.sumOf { it.amount }
+            val incomeTotal = incomeTransactions.sumOf { it.amount } //calculate income total
+            val expenseTotal = expenseTransactions.sumOf { it.amount } //calculate expense total
 
             withContext(Dispatchers.Main) {
-                showPieChart(incomeTotal, expenseTotal)
-                showBarChart(incomeTotal, expenseTotal)
+                showPieChart(incomeTotal, expenseTotal) //show income vs expense pie
+                showBarChart(incomeTotal, expenseTotal) //show income vs expense bar
 
-                populateInsights(expenseTransactions, incomeTransactions, categories)
+                populateInsights(expenseTransactions, incomeTransactions, categories) //show insights
 
                 graphHelper.setupPieChartByCategory(
                     incomeByCategoryChart,
@@ -111,16 +111,16 @@ class AnalyticsFragment : Fragment() {
     private fun showPieChart(income: Double, expense: Double) {
         if (income == 0.0 && expense == 0.0) {
             pieChart.clear()
-            pieChart.setNoDataText("No income or expense data available")
+            pieChart.setNoDataText("No income or expense data available") //no data message
             return
         }
 
-        val entries = mutableListOf<PieEntry>()
-        if (income > 0.0) entries.add(PieEntry(income.toFloat(), "Income"))
-        if (expense > 0.0) entries.add(PieEntry(expense.toFloat(), "Expense"))
+        val entries = mutableListOf<PieEntry>() //create pie entries
+        if (income > 0.0) entries.add(PieEntry(income.toFloat(), "Income")) //add income
+        if (expense > 0.0) entries.add(PieEntry(expense.toFloat(), "Expense")) //add expense
 
-        val dataSet = PieDataSet(entries, "")
-        dataSet.colors = listOf(Color.GREEN, Color.RED)
+        val dataSet = PieDataSet(entries, "") //create dataset
+        dataSet.colors = listOf(Color.GREEN, Color.RED) //set colors
         dataSet.valueTextSize = 14f
         dataSet.sliceSpace = 3f
         dataSet.valueTextColor = Color.BLACK
@@ -130,7 +130,7 @@ class AnalyticsFragment : Fragment() {
         dataSet.valueLinePart2Length = 0.4f
         dataSet.valueLineColor = Color.DKGRAY
 
-        val data = PieData(dataSet)
+        val data = PieData(dataSet) //create pie data
 
         pieChart.setUsePercentValues(true)
         pieChart.data = data
@@ -145,19 +145,19 @@ class AnalyticsFragment : Fragment() {
     private fun showBarChart(income: Double, expense: Double) {
         if (income == 0.0 && expense == 0.0) {
             barChart.clear()
-            barChart.setNoDataText("No income or expense data available")
+            barChart.setNoDataText("No income or expense data available") //no data message
             return
         }
 
         val entries = listOf(
-            BarEntry(0f, income.toFloat()),
-            BarEntry(1f, expense.toFloat())
+            BarEntry(0f, income.toFloat()), //income bar
+            BarEntry(1f, expense.toFloat()) //expense bar
         )
 
-        val dataSet = BarDataSet(entries, "Income vs Expense")
+        val dataSet = BarDataSet(entries, "Income vs Expense") //dataset for bar chart
         dataSet.colors = listOf(
-            Color.parseColor("#4CAF50"),
-            Color.parseColor("#F44336")
+            Color.parseColor("#4CAF50"), //green for income
+            Color.parseColor("#F44336") //red for expense
         )
         dataSet.valueTextSize = 14f
 
@@ -169,7 +169,7 @@ class AnalyticsFragment : Fragment() {
         barChart.description.isEnabled = false
 
         barChart.xAxis.apply {
-            valueFormatter = IndexAxisValueFormatter(listOf("Income", "Expense"))
+            valueFormatter = IndexAxisValueFormatter(listOf("Income", "Expense")) //set x-axis labels
             position = XAxis.XAxisPosition.BOTTOM
             granularity = 1f
             setDrawLabels(true)
@@ -186,7 +186,7 @@ class AnalyticsFragment : Fragment() {
 
     private fun getUserIdFromPrefs(): Int {
         val prefs = requireContext().getSharedPreferences("thryft_session", Context.MODE_PRIVATE)
-        return prefs.getInt("user_id", -1)
+        return prefs.getInt("user_id", -1) //get stored user id
     }
 
     private fun populateInsights(
@@ -194,11 +194,11 @@ class AnalyticsFragment : Fragment() {
         incomes: List<Transaction>,
         categories: List<Category>
     ) {
-        val topCategoryView = requireView().findViewById<TextView>(R.id.topCategoryText)
-        val highestTxnView = requireView().findViewById<TextView>(R.id.highestTransactionText)
-        val suggestionView = requireView().findViewById<TextView>(R.id.suggestionText)
+        val topCategoryView = requireView().findViewById<TextView>(R.id.topCategoryText) //text for top categories
+        val highestTxnView = requireView().findViewById<TextView>(R.id.highestTransactionText) //text for highest txn
+        val suggestionView = requireView().findViewById<TextView>(R.id.suggestionText) //text for tips or warnings
 
-        val categoryMap = categories.associateBy { it.id }
+        val categoryMap = categories.associateBy { it.id } //map of categories by id
 
         if (expenses.isEmpty()) {
             topCategoryView.text = "Top Expense Category: No expenses yet"
@@ -215,15 +215,15 @@ class AnalyticsFragment : Fragment() {
             .groupBy { it.categoryId!! }
             .mapValues { it.value.sumOf { it.amount } }
 
-        val topExpense = groupedExpenses.maxByOrNull { it.value }
+        val topExpense = groupedExpenses.maxByOrNull { it.value } //find top expense category
         val topExpenseCategoryName = topExpense?.key?.let { categoryMap[it]?.name } ?: "Unknown"
         val topExpenseAmount = topExpense?.value ?: 0.0
 
-        val topIncome = groupedIncomes.maxByOrNull { it.value }
+        val topIncome = groupedIncomes.maxByOrNull { it.value } //find top income category
         val topIncomeCategoryName = topIncome?.key?.let { categoryMap[it]?.name } ?: "Unknown"
         val topIncomeAmount = topIncome?.value ?: 0.0
 
-        val highestTxn = expenses.maxByOrNull { it.amount }
+        val highestTxn = expenses.maxByOrNull { it.amount } //find highest transaction
         val highestTxnCategory = highestTxn?.categoryId?.let { categoryMap[it]?.name } ?: "Unknown"
 
         topCategoryView.text = """
@@ -256,18 +256,19 @@ class AnalyticsFragment : Fragment() {
             "🎯 You're within your budgets. Keep up the good work!"
         }
     }
+
     private fun exportAnalyticsAsPdf() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permission = android.Manifest.permission.POST_NOTIFICATIONS
             if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(permission), 1002)
+                requestPermissions(arrayOf(permission), 1002) //request notification permission
                 return
             }
         }
 
         try {
-            val pdfDocument = PdfDocument()
-            val charts = listOf(pieChart, incomeByCategoryChart, expenseByCategoryChart, barChart)
+            val pdfDocument = PdfDocument() //create new pdf
+            val charts = listOf(pieChart, incomeByCategoryChart, expenseByCategoryChart, barChart) //list of charts
 
             var currentPageY = 0
             charts.forEachIndexed { index, chart ->
@@ -289,10 +290,9 @@ class AnalyticsFragment : Fragment() {
 
             val uri = FileProvider.getUriForFile(
                 requireContext(),
-                "com.example.thryftapp.fileprovider", // ✅ Match Manifest
+                "com.example.thryftapp.fileprovider", //match manifest
                 file
             )
-
 
             val openIntent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, "application/pdf")
@@ -330,6 +330,7 @@ class AnalyticsFragment : Fragment() {
             Toast.makeText(requireContext(), "Export failed: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -337,7 +338,7 @@ class AnalyticsFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1002 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            exportAnalyticsAsPdf()
+            exportAnalyticsAsPdf() //call export if permission granted
         }
     }
 }

@@ -12,36 +12,36 @@ import kotlinx.coroutines.launch
 
 class CategoryActivity : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
-    private lateinit var iconPreviewImage: ImageView
-    private var selectedIconId: String = "gmd_home" // default
+    private lateinit var db: AppDatabase //initialize database
+    private lateinit var iconPreviewImage: ImageView //preview for selected icon
+    private var selectedIconId: String = "gmd_home" //default icon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_category)
+        setContentView(R.layout.activity_category) //set activity layout
 
-        db = AppDatabase.getDatabase(this)
-        val prefs = getSharedPreferences("thryft_session", MODE_PRIVATE)
-        val userId = prefs.getInt("user_id", -1)
+        db = AppDatabase.getDatabase(this) //get database instance
+        val prefs = getSharedPreferences("thryft_session", MODE_PRIVATE) //get shared prefs
+        val userId = prefs.getInt("user_id", -1) //retrieve user id
 
-        if (userId == -1) {
+        if (userId == -1) { //check if user id is valid
             Toast.makeText(this, "Invalid User ID", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
-        val categoryNameEditText = findViewById<EditText>(R.id.categoryNameEditText)
-        val typeSpinner = findViewById<Spinner>(R.id.categoryTypeSpinner)
-        val minBudgetEditText = findViewById<EditText>(R.id.minBudgetEditText)
-        val maxBudgetEditText = findViewById<EditText>(R.id.maxBudgetEditText)
-        val addCategoryButton = findViewById<Button>(R.id.addCategoryButton)
-        val categoryListView = findViewById<ListView>(R.id.categoryListView)
-        iconPreviewImage = findViewById(R.id.iconPreviewImage)
+        val categoryNameEditText = findViewById<EditText>(R.id.categoryNameEditText) //category name input
+        val typeSpinner = findViewById<Spinner>(R.id.categoryTypeSpinner) //transaction type dropdown
+        val minBudgetEditText = findViewById<EditText>(R.id.minBudgetEditText) //min budget input
+        val maxBudgetEditText = findViewById<EditText>(R.id.maxBudgetEditText) //max budget input
+        val addCategoryButton = findViewById<Button>(R.id.addCategoryButton) //add category button
+        val categoryListView = findViewById<ListView>(R.id.categoryListView) //list to display categories
+        iconPreviewImage = findViewById(R.id.iconPreviewImage) //icon preview image
 
-        // ✅ Set initial icon
+        //set initial icon preview
         updateIconPreview(selectedIconId)
 
-        // ✅ Handle icon picker result
+        //listen for icon picker result
         supportFragmentManager.setFragmentResultListener("icon_picker_result", this) { _, bundle ->
             val iconId = bundle.getString("selected_icon_id")
             if (iconId != null) {
@@ -50,7 +50,7 @@ class CategoryActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Launch icon picker dialog
+        //open icon picker on image click
         iconPreviewImage.setOnClickListener {
             IconPickerDialogFragment().show(supportFragmentManager, "iconPicker")
         }
@@ -61,12 +61,12 @@ class CategoryActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            typeSpinner.adapter = adapter
+            typeSpinner.adapter = adapter //set spinner adapter
         }
 
         fun loadCategories() {
             CoroutineScope(Dispatchers.IO).launch {
-                val categories = db.categoryDao().getAllCategories(userId)
+                val categories = db.categoryDao().getAllCategories(userId) //get all categories for user
                 runOnUiThread {
                     val adapter = ArrayAdapter(
                         this@CategoryActivity,
@@ -75,12 +75,12 @@ class CategoryActivity : AppCompatActivity() {
                             "${it.name} (${it.type}) - Min: ${it.minBudget}, Max: ${it.maxBudget}"
                         }
                     )
-                    categoryListView.adapter = adapter
+                    categoryListView.adapter = adapter //set list adapter
                 }
             }
         }
 
-        loadCategories()
+        loadCategories() //initial load of categories
 
         addCategoryButton.setOnClickListener {
             val name = categoryNameEditText.text.toString()

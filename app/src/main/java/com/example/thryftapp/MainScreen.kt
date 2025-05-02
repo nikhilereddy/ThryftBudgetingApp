@@ -307,7 +307,7 @@ fun FabGroup(
             opacity = LinearEasing.transform(0.3f, 0.8f, animationProgress),
             onClick = {
                 // Replace Intent with FragmentTransaction
-                val fragment = ComingSoonFragment() // Create a new instance of the fragment
+                val fragment = AnalyticsFragment() // Create a new instance of the fragment
 
                 // Access the current activity and replace the fragment dynamically
                 val activity = context as? AppCompatActivity

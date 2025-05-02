@@ -12,17 +12,17 @@ import kotlinx.coroutines.launch
 
 class GraphActivity : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
-    private lateinit var graphHelper: GraphHelper
+    private lateinit var db: AppDatabase //database reference
+    private lateinit var graphHelper: GraphHelper //helper for drawing charts
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_graph)
+        setContentView(R.layout.activity_graph) //set layout
 
-        db = AppDatabase.getDatabase(this)
-        graphHelper = GraphHelper(this)
+        db = AppDatabase.getDatabase(this) //init db
+        graphHelper = GraphHelper(this) //init chart helper
 
-        // Retrieve user ID from session
+        //retrieve user id from session
         val prefs = getSharedPreferences("thryft_session", MODE_PRIVATE)
         val userId = prefs.getInt("user_id", -1)
 
@@ -31,21 +31,21 @@ class GraphActivity : AppCompatActivity() {
             return
         }
 
-        val barChart = findViewById<BarChart>(R.id.barChart)
+        val barChart = findViewById<BarChart>(R.id.barChart) //find bar chart view
 
-        // Fetch transactions and update chart
+        //fetch transactions and update chart
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val transactions = db.transactionDao().getAllTransactions(userId)
+                val transactions = db.transactionDao().getAllTransactions(userId) //get all transactions
 
-                // If there are no transactions
+                //if there are no transactions
                 if (transactions.isEmpty()) {
                     runOnUiThread {
                         Toast.makeText(this@GraphActivity, "No transactions available", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     runOnUiThread {
-                        graphHelper.setupExpenseVsIncomeChart(barChart, transactions)
+                        graphHelper.setupExpenseVsIncomeChart(barChart, transactions) //draw chart
                     }
                 }
             } catch (e: Exception) {
@@ -54,17 +54,15 @@ class GraphActivity : AppCompatActivity() {
                 }
             }
         }
+
         findViewById<Button>(R.id.incomePieChartBtn).setOnClickListener {
             val intent = Intent(this, IncomePieChartActivity::class.java)
-            startActivity(intent)
+            startActivity(intent) //navigate to income chart
         }
 
         findViewById<Button>(R.id.expensePieChartBtn).setOnClickListener {
             val intent = Intent(this, ExpensePieChartActivity::class.java)
-            startActivity(intent)
+            startActivity(intent) //navigate to expense chart
         }
-
     }
-
-
 }

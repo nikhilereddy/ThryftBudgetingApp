@@ -17,38 +17,38 @@ class CategoryAdapter(
 ) : BaseAdapter() {
 
     fun updateList(newList: List<Category>) {
-        categories.clear()
-        categories.addAll(newList)
-        notifyDataSetChanged()
+        categories.clear() //clear existing list
+        categories.addAll(newList) //add new items
+        notifyDataSetChanged() //refresh adapter
     }
 
-    override fun getCount(): Int = categories.size
+    override fun getCount(): Int = categories.size //return list size
 
-    override fun getItem(position: Int): Any = categories[position]
+    override fun getItem(position: Int): Any = categories[position] //get item at position
 
-    override fun getItemId(position: Int): Long = categories[position].id.toLong()
+    override fun getItemId(position: Int): Long = categories[position].id.toLong() //return item id
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val category = categories[position]
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_category_card, parent, false)
+        val category = categories[position] //get current category
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_category_card, parent, false) //inflate layout if needed
 
-        val nameText = view.findViewById<TextView>(R.id.categoryNameText)
-        val typeText = view.findViewById<TextView>(R.id.categoryTypeText)
-        val iconImage = view.findViewById<ImageView>(R.id.categoryIcon)
+        val nameText = view.findViewById<TextView>(R.id.categoryNameText) //find name text
+        val typeText = view.findViewById<TextView>(R.id.categoryTypeText) //find type text
+        val iconImage = view.findViewById<ImageView>(R.id.categoryIcon) //find icon image
 
-        nameText.text = category.name
-        typeText.text = category.type
+        nameText.text = category.name //set name
+        typeText.text = category.type //set type
 
-        // 🔥 Set icon using Android-Iconics (from iconId stored as a string like "gmd_home")
+        //set icon from iconId
         try {
-            val iconEnum = GoogleMaterial.Icon.valueOf(category.iconId)
-            val drawable = IconicsDrawable(context, iconEnum)
+            val iconEnum = GoogleMaterial.Icon.valueOf(category.iconId) //get icon enum
+            val drawable = IconicsDrawable(context, iconEnum) //create drawable
 
-            iconImage.setImageDrawable(drawable)
+            iconImage.setImageDrawable(drawable) //set icon
         } catch (e: Exception) {
-            iconImage.setImageResource(R.drawable.ic_lock) // fallback if invalid icon
+            iconImage.setImageResource(R.drawable.ic_lock) //fallback icon
         }
 
-        return view
+        return view //return view
     }
 }
