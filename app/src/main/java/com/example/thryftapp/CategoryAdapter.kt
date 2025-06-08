@@ -26,7 +26,8 @@ class CategoryAdapter(
 
     override fun getItem(position: Int): Any = categories[position] //get item at position
 
-    override fun getItemId(position: Int): Long = categories[position].id.toLong() //return item id
+   // override fun getItemId(position: Int): Long = categories[position].id.toLong() //return item id
+   override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val category = categories[position] //get current category

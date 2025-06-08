@@ -6,9 +6,7 @@ import androidx.room.PrimaryKey
 //define user entity with room
 @Entity(tableName = "users")
 data class User(
-    @PrimaryKey(autoGenerate = true) //autogenerate user id
-    val id: Int = 0,
-
+    @PrimaryKey val id: String, // <-- use Firebase UID as ID
     val name: String, //user full name
     val email: String, //user email
     val password: String, //user password

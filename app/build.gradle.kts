@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("org.jetbrains.kotlin.kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -84,5 +85,6 @@ dependencies {
     implementation ("com.mikepenz:google-material-typeface:4.0.0.1-kotlin@aar")
     implementation ("androidx.viewpager2:viewpager2:1.0.0")
     implementation ("androidx.recyclerview:recyclerview:1.3.2")
-
+    implementation("com.google.firebase:firebase-auth:22.3.0")
+    implementation("com.google.firebase:firebase-firestore:24.11.0")
 }

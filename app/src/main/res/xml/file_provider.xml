@@ -2,5 +2,5 @@
 <paths>
     <files-path name="photos" path="." />
     <external-files-path name="external_files" path="." />
-
+    <cache-path name="cache" path="." /> <!-- ✅ Add this line -->
 </paths>

@@ -16,9 +16,9 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Category(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0, //unique id for each category
-    val userId: Int, //foreign key to user
+    @PrimaryKey
+    val id: String,
+    val userId: String, //foreign key to user
     val name: String, //category name
     val type: String, // "INCOME" or "EXPENSE"
     val minBudget: Double, //minimum budget limit

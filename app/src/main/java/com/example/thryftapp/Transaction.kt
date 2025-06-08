@@ -30,8 +30,8 @@ import java.util.Date
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0, //primary key
-    val userId: Int, //linked user
-    val categoryId: Int?, //linked category
+    val userId: String, //linked user
+    val categoryId: String?, //linked category
     val amount: Double, //amount of transaction
     val type: String, // "INCOME" or "EXPENSE"
     val description: String?, //optional note

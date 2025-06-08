@@ -12,7 +12,7 @@ import java.util.Date
 
 @Database(
     entities = [User::class, Transaction::class, Category::class], //define database tables
-    version = 3, //current database version
+    version = 7, //current database version
     exportSchema = false
 )
 @TypeConverters(Converters::class) //enable converters

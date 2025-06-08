@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.thryftapp">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -35,28 +39,21 @@
         <activity android:name=".WelcomeActivity2" />
         <activity android:name=".WelcomeActivity3" />
 
-        <!-- New NavHost Activity (Center of the app after login) -->
+        <!-- Core Navigation Host -->
         <activity
             android:name=".NavHostActivity"
-            android:windowSoftInputMode="adjustNothing">
-        </activity>
-        <!-- Other Activities (OPTIONAL: Can delete later when you move them to Fragments) -->
+            android:windowSoftInputMode="adjustNothing" />
+
+        <!-- Optional legacy Activities -->
         <activity android:name=".DashboardActivity" android:exported="false" />
         <activity android:name=".TransactionActivity" android:exported="false" />
         <activity android:name=".CategoryActivity" android:exported="false" />
         <activity android:name=".GraphActivity" android:exported="false" />
+        <activity android:name=".ExpensePieChartActivity" android:exported="false" />
+        <activity android:name=".IncomePieChartActivity" android:exported="false" />
+        <activity android:name=".ViewCategoryTransactionsActivity" android:exported="false" />
 
-        <activity
-            android:name=".ExpensePieChartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".IncomePieChartActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ViewCategoryTransactionsActivity"
-            android:exported="false" />
-
-        <!-- File Provider for uploads -->
+        <!-- FileProvider for camera & gallery -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.thryftapp.fileprovider"
