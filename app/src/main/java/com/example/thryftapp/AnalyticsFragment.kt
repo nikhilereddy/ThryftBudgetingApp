@@ -664,6 +664,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import java.io.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AnalyticsFragment : Fragment() {
@@ -674,12 +675,18 @@ class AnalyticsFragment : Fragment() {
     private lateinit var incomeByCategoryChart: PieChart
     private lateinit var expenseByCategoryChart: PieChart
     private lateinit var barChart: BarChart
+    private lateinit var goalsTimelineChart: LineChart
+    private lateinit var categoryGoalsChart: BarChart
+    private var customStartDate: Date? = null
+    private var customEndDate: Date? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_analytics, container, false)
+        goalsTimelineChart = view.findViewById(R.id.goalsTimelineChart)
+        categoryGoalsChart = view.findViewById(R.id.categoryGoalsChart)
 
         pieChart = view.findViewById(R.id.incomeExpensePieChart)
         incomeByCategoryChart = view.findViewById(R.id.incomeByCategoryChart)
@@ -687,6 +694,33 @@ class AnalyticsFragment : Fragment() {
         barChart = view.findViewById(R.id.categoryBarChart)
 
         graphHelper = GraphHelper(requireContext())
+        val startDateInput = view.findViewById<EditText>(R.id.startDateInput)
+        val endDateInput = view.findViewById<EditText>(R.id.endDateInput)
+        val applyButton = view.findViewById<Button>(R.id.applyDateFilterButton)
+
+        val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+
+        startDateInput.setOnClickListener {
+            showDatePicker { date ->
+                customStartDate = date
+                startDateInput.setText(dateFormat.format(date))
+            }
+        }
+
+        endDateInput.setOnClickListener {
+            showDatePicker { date ->
+                customEndDate = date
+                endDateInput.setText(dateFormat.format(date))
+            }
+        }
+
+        applyButton.setOnClickListener {
+            if (customStartDate != null && customEndDate != null) {
+                loadAnalyticsWithFilter("Custom Range")
+            } else {
+                Toast.makeText(requireContext(), "Please select both dates", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         view.findViewById<ImageView>(R.id.backButton)?.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
@@ -696,9 +730,39 @@ class AnalyticsFragment : Fragment() {
             view.postDelayed({ exportAnalyticsAsPdf() }, 500)
         }
 
-        loadAnalytics()
 
         return view
+    }
+
+    private fun showDateRangePicker() {
+        val today = Calendar.getInstance()
+
+        val startListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            val startCal = Calendar.getInstance().apply {
+                set(year, month, day, 0, 0, 0)
+            }
+            customStartDate = startCal.time
+
+            val endListener = DatePickerDialog.OnDateSetListener { _, endYear, endMonth, endDay ->
+                val endCal = Calendar.getInstance().apply {
+                    set(endYear, endMonth, endDay, 23, 59, 59)
+                }
+                customEndDate = endCal.time
+                loadAnalyticsWithFilter("Custom Range")
+            }
+
+            val datePickerEnd = DatePickerDialog(requireContext(), endListener,
+                today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerEnd.datePicker.minDate = startCal.timeInMillis
+            datePickerEnd.show()
+        }
+
+        val datePickerStart = DatePickerDialog(requireContext(), startListener,
+            today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerStart.datePicker.maxDate = today.timeInMillis
+        datePickerStart.show()
     }
 
     private fun getUserIdFromPrefs(): String {
@@ -706,7 +770,23 @@ class AnalyticsFragment : Fragment() {
         return prefs.getString("user_id", "") ?: ""
     }
 
-    private fun loadAnalytics() {
+
+    private fun showDatePicker(isEndDate: Boolean = false, onDateSelected: (Date) -> Unit) {
+        val now = Calendar.getInstance()
+        DatePickerDialog(requireContext(), { _, year, month, day ->
+            val cal = Calendar.getInstance().apply {
+                if (isEndDate) {
+                    set(year, month, day, 23, 59, 59)
+                } else {
+                    set(year, month, day, 0, 0, 0)
+                }
+            }
+            onDateSelected(cal.time)
+        }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
+
+    private fun loadAnalyticsWithFilter(filter: String) {
         val userId = getUserIdFromPrefs()
         if (userId.isEmpty()) return
 
@@ -759,8 +839,14 @@ class AnalyticsFragment : Fragment() {
                     }
                 }
 
-                val incomeTxns = transactions.filter { it.type.equals("INCOME", true) }
-                val expenseTxns = transactions.filter { it.type.equals("EXPENSE", true) }
+                val filteredTxns = transactions.filter {
+                    val date = it.date
+                    (customStartDate == null || !date.before(customStartDate)) &&
+                            (customEndDate == null || !date.after(customEndDate))
+                }
+
+                val incomeTxns = filteredTxns.filter { it.type.equals("INCOME", true) }
+                val expenseTxns = filteredTxns.filter { it.type.equals("EXPENSE", true) }
 
                 val incomeTotal = incomeTxns.sumOf { it.amount }
                 val expenseTotal = expenseTxns.sumOf { it.amount }
@@ -781,6 +867,16 @@ class AnalyticsFragment : Fragment() {
                         expenseTxns,
                         categories
                     )
+                    graphHelper.setupGoalsTimelineChart(
+                        chart = goalsTimelineChart,
+                        transactions = filteredTxns,
+                        categories = categories
+                    )
+                    graphHelper.setupCategorySpendingWithGoalsChart(
+                        categoryGoalsChart,
+                        filteredTxns,
+                        categories
+                    )
                 }
 
             } catch (e: Exception) {
@@ -793,6 +889,68 @@ class AnalyticsFragment : Fragment() {
                 }
             }
         }
+    }
+    fun setupGoalsTimelineChart(chart: LineChart, transactions: List<Transaction>, categories: List<Category>) {
+        val goalMap = categories.associateBy { it.id }
+
+        // Group by month (e.g., "2024-06")
+        val dateFormatter = java.text.SimpleDateFormat("yyyy-MM", Locale.getDefault())
+        val groupedActuals = transactions.groupBy {
+            dateFormatter.format(it.date)
+        }.mapValues { entry ->
+            entry.value.sumOf { it.amount }
+        }
+
+        val groupedGoals = transactions.groupBy {
+            dateFormatter.format(it.date)
+        }.mapValues { entry ->
+            entry.value.sumOf { txn ->
+                val cat = goalMap[txn.categoryId]
+                if (txn.type.equals("INCOME", true)) cat?.minBudget ?: 0.0 else cat?.maxBudget ?: 0.0
+            }
+        }
+
+        val months = groupedActuals.keys.union(groupedGoals.keys).sorted()
+        val actualEntries = mutableListOf<Entry>()
+        val goalEntries = mutableListOf<Entry>()
+
+        months.forEachIndexed { index, month ->
+            val actual = groupedActuals[month] ?: 0.0
+            val goal = groupedGoals[month] ?: 0.0
+            actualEntries.add(Entry(index.toFloat(), actual.toFloat()))
+            goalEntries.add(Entry(index.toFloat(), goal.toFloat()))
+        }
+
+        val actualDataSet = LineDataSet(actualEntries, "Actual").apply {
+            color = Color.BLUE
+            valueTextSize = 12f
+            lineWidth = 2f
+            circleRadius = 4f
+        }
+
+        val goalDataSet = LineDataSet(goalEntries, "Goal").apply {
+            color = Color.GRAY
+            valueTextSize = 12f
+            lineWidth = 2f
+            circleRadius = 4f
+        }
+
+        val lineData = LineData(actualDataSet, goalDataSet)
+        chart.data = lineData
+
+        chart.xAxis.apply {
+            granularity = 1f
+            valueFormatter = IndexAxisValueFormatter(months)
+            position = XAxis.XAxisPosition.BOTTOM
+            textSize = 10f
+        }
+
+        chart.axisLeft.axisMinimum = 0f
+        chart.axisRight.isEnabled = false
+        chart.description.isEnabled = false
+        chart.legend.isEnabled = true
+        chart.animateX(1000)
+        chart.invalidate()
     }
 
     private fun showPieChart(income: Double, expense: Double) {
@@ -944,7 +1102,14 @@ class AnalyticsFragment : Fragment() {
         }
 
         try {
-            val charts = listOf(pieChart, incomeByCategoryChart, expenseByCategoryChart, barChart)
+            val charts = listOf(
+                pieChart,
+                incomeByCategoryChart,
+                expenseByCategoryChart,
+                barChart,
+                goalsTimelineChart,
+                categoryGoalsChart
+            )
             val document = PdfDocument()
 
             charts.forEachIndexed { index, chart ->

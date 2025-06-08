@@ -38,13 +38,60 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Income vs Expense"
+                android:text="Analytics"
                 android:textSize="20sp"
                 android:layout_marginTop="6dp"
                 android:textStyle="bold"
                 android:textColor="@color/purple_500"
                 android:layout_marginBottom="12dp" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/dateRangeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:paddingHorizontal="16dp">
+
+            <EditText
+                android:id="@+id/startDateInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Start Date"
+                android:focusable="false"
+                android:inputType="none"
+                android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                android:padding="10dp"
+                android:background="@android:drawable/edit_text"/>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/endDateInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="End Date"
+                android:focusable="false"
+                android:inputType="none"
+                android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                android:padding="10dp"
+                android:background="@android:drawable/edit_text"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/applyDateFilterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp" />
+
 
         <!-- PieChart: Income vs Expense Card -->
         <LinearLayout
@@ -145,6 +192,62 @@
                 android:layout_height="350dp"
                 android:layout_marginBottom="36dp" />
         </LinearLayout>
+
+
+        <!-- Timeline Chart: Goals vs Actual -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_light_card"
+            android:padding="16dp"
+            android:gravity="center_horizontal"
+            android:elevation="4dp"
+            android:layout_marginBottom="36dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Goals vs Actual Line Chart"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/blackk"
+                android:layout_marginBottom="12dp" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/goalsTimelineChart"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_marginBottom="36dp" />
+        </LinearLayout>
+
+        <!-- Category Spending vs Goal Chart -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/bg_light_card"
+            android:elevation="4dp"
+            android:layout_marginBottom="32dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Spending vs Goals per Category"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/blackk"
+                android:layout_marginBottom="12dp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/categoryGoalsChart"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_marginBottom="12dp" />
+        </LinearLayout>
+
 
         <!-- Summary Card -->
         <LinearLayout
