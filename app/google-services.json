@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "695932092314",
+    "project_id": "thryftapp-53fc9",
+    "storage_bucket": "thryftapp-53fc9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:695932092314:android:b4c25774287028f56bc423",
+        "android_client_info": {
+          "package_name": "com.example.thryftapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASsOmNz7Hj2ca1gc3DAY0Pe_HW-Uxke48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
