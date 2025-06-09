@@ -13,7 +13,7 @@ import com.mikepenz.iconics.typeface.library.googlematerial.GoogleMaterial
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+//done
 class AddCategoryFragment : Fragment() {
 
     private lateinit var db: AppDatabase
