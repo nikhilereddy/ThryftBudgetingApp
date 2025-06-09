@@ -104,6 +104,7 @@ class CategoryTransactionsFragment : Fragment() {
 package com.example.thryftapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -137,27 +138,34 @@ class CategoryTransactionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_category_transactions, container, false)
 
+    //handle view created for category transaction screen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //handle back button click
         view.findViewById<ImageView>(R.id.backButton)?.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
+            Log.d("CategoryTransactions", "back button clicked") //log back click
         }
 
+        //bind views
         val header = view.findViewById<TextView>(R.id.categoryHeader)
         val listView = view.findViewById<ListView>(R.id.transactionListView)
 
+        //initialize firebase
         firebaseAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
         val currentUser = firebaseAuth.currentUser
         if (currentUser == null || categoryId == null) {
             Toast.makeText(context, "Invalid user or category", Toast.LENGTH_SHORT).show()
+            Log.d("CategoryTransactions", "invalid user or null categoryId") //log invalid state
             return
         }
 
         val userId = currentUser.uid
 
+        //fetch category details
         firestore.collection("users")
             .document(userId)
             .collection("categories")
@@ -166,16 +174,17 @@ class CategoryTransactionsFragment : Fragment() {
             .addOnSuccessListener { doc ->
                 if (!doc.exists()) {
                     Toast.makeText(context, "Category not found", Toast.LENGTH_SHORT).show()
+                    Log.d("CategoryTransactions", "category not found") //log not found
                     return@addOnSuccessListener
                 }
 
                 categoryName = doc.getString("name") ?: "Unknown"
+                Log.d("CategoryTransactions", "category loaded: $categoryName") //log category name
 
+                //fetch transactions for this category
                 firestore.collection("transactions")
                     .whereEqualTo("userId", userId)
                     .whereEqualTo("categoryId", categoryId)
-
-
                     .get()
                     .addOnSuccessListener { result ->
                         val transactions = result.mapNotNull { txn ->
@@ -199,17 +208,22 @@ class CategoryTransactionsFragment : Fragment() {
                             android.R.layout.simple_list_item_1,
                             displayList
                         )
+
+                        Log.d("CategoryTransactions", "loaded ${transactions.size} transactions") //log transaction count
                     }
                     .addOnFailureListener {
                         Toast.makeText(context, "Error loading transactions", Toast.LENGTH_LONG).show()
+                        Log.d("CategoryTransactions", "failed to load transactions: ${it.message}") //log error
                     }
 
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Error fetching category", Toast.LENGTH_LONG).show()
+                Log.d("CategoryTransactions", "failed to fetch category: ${it.message}") //log error
             }
     }
 
+    //create new instance of category transactions fragment with category id
     companion object {
         fun newInstance(categoryId: String): CategoryTransactionsFragment {
             val fragment = CategoryTransactionsFragment()
@@ -219,4 +233,5 @@ class CategoryTransactionsFragment : Fragment() {
             return fragment
         }
     }
+
 }

@@ -11,7 +11,7 @@ class ComingSoonFragment : Fragment(R.layout.fragment_coming_soon) {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<ImageView>(R.id.backButton)?.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack() //navigate back
+            requireActivity().supportFragmentManager.popBackStack() //navigate backk
         }
     }
 }

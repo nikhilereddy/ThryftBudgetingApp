@@ -1,100 +1,7 @@
-/*
 package com.example.thryftapp
 
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.github.mikephil.charting.charts.PieChart
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
-class IncomePieChartActivity : AppCompatActivity() {
-
-    private lateinit var db: AppDatabase //database reference
-    private lateinit var graphHelper: GraphHelper //chart helper
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pie_chart) //set layout
-
-        db = AppDatabase.getDatabase(this) //init database
-        graphHelper = GraphHelper(this) //init graph helper
-
-        val prefs = getSharedPreferences("thryft_session", MODE_PRIVATE) //get session prefs
-        val userId = prefs.getInt("user_id", -1) //get user id
-
-        if (userId == -1) {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show() //show error
-            return
-        }
-
-        val pieChart = findViewById<PieChart>(R.id.pieChart) //find pie chart view
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val transactions = db.transactionDao().getAllTransactions(userId) //get transactions
-            pieChart.setUsePercentValues(true) //show percentages
-            val categories = db.categoryDao().getAllCategories(userId) //get categories
-            val incomeTransactions = transactions.filter { it.type == "INCOME" } //filter income
-            runOnUiThread {
-                graphHelper.setupPieChartByCategory(pieChart, incomeTransactions, categories) //draw chart
-            }
-        }
-    }
-}
-*/
-/*
-package com.example.thryftapp
-
-import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.github.mikephil.charting.charts.PieChart
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
-class IncomePieChartActivity : AppCompatActivity() {
-
-    private lateinit var db: AppDatabase //database reference
-    private lateinit var graphHelper: GraphHelper //chart helper
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pie_chart) //set layout
-
-        db = AppDatabase.getDatabase(this) //init database
-        graphHelper = GraphHelper(this) //init graph helper
-
-        val prefs = getSharedPreferences("thryft_session", MODE_PRIVATE) //get session prefs
-        val userId = prefs.getString("user_id", null) //get Firebase user ID as String
-
-        if (userId.isNullOrEmpty()) {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val pieChart = findViewById<PieChart>(R.id.pieChart) //find pie chart view
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val transactions = db.transactionDao().getAllTransactions(userId) //get transactions for user
-            val categories = db.categoryDao().getAllCategories(userId) //get user categories
-            val incomeTransactions = transactions.filter { it.type == "INCOME" } //filter income
-
-            runOnUiThread {
-                pieChart.setUsePercentValues(true) //enable percentage view
-                graphHelper.setupPieChartByCategory(pieChart, incomeTransactions, categories) //draw chart
-            }
-        }
-    }
-}
-*/
-package com.example.thryftapp
-
-import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.PieChart
@@ -124,17 +31,27 @@ class IncomePieChartActivity : AppCompatActivity() {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
             return
         }
+        /**
+         * Attribution:
+         * Website: Update XAxis values in MPAndroidChart
 
+         *  Author: aiwiguna
+         *  URL: https://stackoverflow.com/questions/63807093/update-xaxis-values-in-mpandroidchart
+         *  Accessed on: 2025-06-06
+        -        */
+        //load income transactions and categories and setup pie chart
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val firestore = FirebaseFirestore.getInstance()
 
+                //fetch income transactions for user
                 val txnSnapshot = firestore.collection("transactions")
                     .whereEqualTo("userId", userId)
                     .whereEqualTo("type", "INCOME")
                     .get()
                     .await()
 
+                //parse transaction documents
                 val transactions = txnSnapshot.documents.mapNotNull { doc ->
                     try {
                         Transaction(
@@ -149,16 +66,21 @@ class IncomePieChartActivity : AppCompatActivity() {
                             createdAt = doc.getDate("createdAt") ?: Date()
                         )
                     } catch (e: Exception) {
+                        Log.d("IncomePieChart", "failed to parse transaction: ${e.message}") //log error
                         null
                     }
                 }
 
+                Log.d("IncomePieChart", "loaded ${transactions.size} income transactions") //log transaction count
+
+                //fetch categories
                 val catSnapshot = firestore.collection("users")
                     .document(userId)
                     .collection("categories")
                     .get()
                     .await()
 
+                //parse category documents
                 val categories = catSnapshot.documents.mapNotNull { doc ->
                     try {
                         Category(
@@ -171,18 +93,31 @@ class IncomePieChartActivity : AppCompatActivity() {
                             iconId = doc.getString("iconId") ?: "gmd_home"
                         )
                     } catch (e: Exception) {
+                        Log.d("IncomePieChart", "failed to parse category: ${e.message}") //log error
                         null
                     }
                 }
+                /**
+                 * Attribution:
+                 * Website: Update XAxis values in MPAndroidChart
 
+                 *  Author: aiwiguna
+                 *  URL: https://stackoverflow.com/questions/63807093/update-xaxis-values-in-mpandroidchart
+                 *  Accessed on: 2025-06-06
+                -        */
+                Log.d("IncomePieChart", "loaded ${categories.size} categories") //log category count
+
+                //update pie chart on main thread
                 withContext(Dispatchers.Main) {
                     pieChart.setUsePercentValues(true)
                     graphHelper.setupPieChartByCategory(pieChart, transactions, categories)
+                    Log.d("IncomePieChart", "pie chart rendered") //log success
                 }
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@IncomePieChartActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Log.d("IncomePieChart", "error loading data: ${e.message}") //log failure
                 }
             }
         }

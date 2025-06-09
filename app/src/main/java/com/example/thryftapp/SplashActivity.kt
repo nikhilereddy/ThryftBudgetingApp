@@ -17,7 +17,7 @@ class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding //view binding
 
     private var animationEnded = false //flag for animation end
-    private var delayCompleted = false //flag for delay complete
+    private var delayCompleted = false //flag for delay completee
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

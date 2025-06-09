@@ -10,7 +10,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class PdfExportHelper(private val context: Context) {
+    /**
+     * Attribution:
+     * Website: Creating a pdf file in android programmatically and writing in it
 
+     *  Author: Husayn Hakeem
+     *  URL: https://stackoverflow.com/questions/34296149/creating-a-pdf-file-in-android-programmatically-and-writing-in-it
+     *  Accessed on: 2025-06-06
+    -        */
     fun createTransactionPdf(transactions: List<Transaction>): File {
         val document = PdfDocument() //create pdf document
         val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create() //define page size

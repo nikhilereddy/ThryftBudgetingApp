@@ -27,7 +27,7 @@ class NavHostActivity : AppCompatActivity() {
             replace(R.id.fragment_container, fragment) //load into container
         }
 
-        //setup compose view for fluid nav bar
+        //setup compose view for fluid nav barr
         findViewById<ComposeView>(R.id.compose_view).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed) //cleanup strategy
             setContent {

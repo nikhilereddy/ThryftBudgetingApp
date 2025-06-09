@@ -8,7 +8,14 @@ import java.util.Date
 import java.util.Locale
 
 class PhotoUploadHelper(private val context: Context) {
+    /**
+     * Attribution:
+     * Website: How to Implement the Android Photo Picker in Your App
 
+     *  Author: Emran Khandaker Evan
+     *  URL:https://blog.evanemran.info/how-to-implement-the-android-photo-picker-in-your-app
+     *  Accessed on: 2025-06-07
+    -        */
     fun savePhoto(uri: Uri): String? {
         try {
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date()) //generate timestamp
@@ -23,7 +30,7 @@ class PhotoUploadHelper(private val context: Context) {
             return outputFile.absolutePath //return saved file path
         } catch (e: Exception) {
             e.printStackTrace() //log error
-            return null //return null if failed
+            return null //return null if failedd
         }
     }
 }

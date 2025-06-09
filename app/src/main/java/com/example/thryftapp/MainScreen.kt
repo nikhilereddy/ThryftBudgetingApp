@@ -38,7 +38,15 @@ import com.example.thryftapp.theme.FluidBottomNavigationTheme
 import com.example.thryftapp.ui.theme.DEFAULT_PADDING
 import kotlin.math.PI
 import kotlin.math.sin
+//navbar
+/**
+ * Attribution:
+ * Website: Liquid Bottom Navigation UI Design in Jetpack Compose
 
+ *  Author: Kusnier, J. (2022)
+ *  URL: https://youtu.be/nP42CBV5Rd0
+ *  Accessed on: 2025-06-06
+-        */
 @RequiresApi(Build.VERSION_CODES.S)
 private fun getRenderEffect(): RenderEffect {
     val blurEffect = RenderEffect.createBlurEffect(80f, 80f, Shader.TileMode.MIRROR) //blur effect

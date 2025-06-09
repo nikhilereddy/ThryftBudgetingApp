@@ -50,6 +50,6 @@ class CategoryAdapter(
             iconImage.setImageResource(R.drawable.ic_lock) //fallback icon
         }
 
-        return view //return view
+        return view //return vieww
     }
 }

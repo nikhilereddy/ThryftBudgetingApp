@@ -38,7 +38,7 @@ class ProfileFragment : Fragment() {
         val enabled = prefs.getBoolean("notifications_enabled", true)
         notificationSwitch.isChecked = enabled
 
-        //create notification channel if needed
+        //create notification channel if neededd
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 "thryft_channel",

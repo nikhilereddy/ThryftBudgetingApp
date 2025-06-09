@@ -19,7 +19,7 @@ import java.util.Date
             entity = Category::class,
             parentColumns = ["id"],
             childColumns = ["categoryId"],
-            onDelete = ForeignKey.SET_NULL //delete category = null categoryId
+            onDelete = ForeignKey.SET_NULL //deleete category = null categoryId
         )
     ],
     indices = [

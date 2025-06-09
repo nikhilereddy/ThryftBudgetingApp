@@ -90,7 +90,6 @@ class SignUpActivity : AppCompatActivity() {
     }
 }
 */
-
 package com.example.thryftapp
 
 import android.app.AlertDialog
@@ -103,6 +102,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.thryftapp.databinding.ActivitySignupBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -123,21 +123,19 @@ class SignUpActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        // ❌ Show popup and disable fields if offline
         if (!NetworkUtils.isOnline(this)) {
             showNoInternetDialog()
             disableInputs()
         }
 
-        // Go to login screen
         val goToLogin = {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
+
         binding.backButton.setOnClickListener { goToLogin() }
         binding.signInLink.setOnClickListener { goToLogin() }
 
-        // Sign up button
         binding.signupButton.setOnClickListener {
             val name = binding.fullNameEditText.text.toString().trim()
             val email = binding.emailEditText.text.toString().trim().lowercase(Locale.ROOT)
@@ -189,19 +187,40 @@ class SignUpActivity : AppCompatActivity() {
                     val date = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
                     val firebaseUid = firebaseAuth.currentUser?.uid ?: return@addOnCompleteListener
 
-                    val newUser = User(    id = firebaseUid,
+                    val newUser = User(
+                        id = firebaseUid,
                         name = name,
                         email = email,
                         password = password,
-                        createdAt = date)
+                        createdAt = date
+                    )
 
+                    // 💾 Save to Room
                     lifecycleScope.launch(Dispatchers.IO) {
                         userDao.insertUser(newUser)
                     }
 
-                    toast("Account created! Please sign in")
-                    startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
-                    finish()
+                    // 🔥 Save to Firestore
+                    val userMap = hashMapOf(
+                        "id" to firebaseUid,
+                        "name" to name,
+                        "email" to email,
+                        "createdAt" to date
+                    )
+
+                    FirebaseFirestore.getInstance()
+                        .collection("users")
+                        .document(firebaseUid)
+                        .set(userMap)
+                        .addOnSuccessListener {
+                            toast("Account created! Please sign in")
+                            startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            toast("Firestore error: ${e.message}")
+                        }
+
                 } else {
                     toast("Sign-up failed: ${task.exception?.message}")
                 }

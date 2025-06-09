@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
 import java.util.Date
-
+//PLEASE NOTE THAT WE LEFT THIS AS IS AND BUILD UPON THIS PROJECT TO NOW USER FIRESTORE AND FIRRBASE AUTH
 @Database(
     entities = [User::class, Transaction::class, Category::class], //define database tables
     version = 7, //current database version
@@ -34,7 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        // ✅ Migration from version 2 to 3 (adding minBudget and maxBudget)
+        //Migration from version 2 to 3 (adding minBudget and maxBudget)
         val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE categories ADD COLUMN minBudget REAL NOT NULL DEFAULT 0.0") //add minBudget column

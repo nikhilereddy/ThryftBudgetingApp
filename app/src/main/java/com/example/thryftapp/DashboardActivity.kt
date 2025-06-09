@@ -7,6 +7,6 @@ import com.example.thryftapp.R
 class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard) //set layout for dashboard
+        setContentView(R.layout.activity_dashboard) //set layout for dashboardd
     }
 }
